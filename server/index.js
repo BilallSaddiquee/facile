@@ -3,7 +3,7 @@ const app = express();
 const pool = require('./dbConfig');
 const Redis = require('ioredis');
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = 'mongodb://0.0.0.0:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
 
@@ -99,7 +99,19 @@ app.post("/login", async (req, res) => {
 });
 
 
-
+app.post('/users', async (req, res) => {
+  const { name, email, password, contact } = req.body;
+  try {
+    const newUser = await pool.query(
+      'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, email, password, contact]
+    );
+    res.json(newUser.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 // Update an existing user
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
