@@ -38,40 +38,65 @@ app.get('/users/:id', async (req, res) => {
 });
 
 // Create a new user
-app.post('/users', async (req, res) => {
-    const { name, email, password, contact } = req.body;
-    try {
-      const newUser = await pool.query(
-        'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
-        [name, email, password, contact]
-      );
-  
-      // Store status code, user ID, and timestamp in Redis
-      const statusCode = 200;
-      const userId = newUser.rows[0].id;
-      const timestamp = new Date().toISOString();
-  
-      const cacheKey = `user:${userId}`;
-      const cacheData = JSON.stringify({ statusCode, userId, timestamp });
-  
-      await redisClient.setex(cacheKey, 3600, cacheData);
-  
-      // Store status code, user ID, and timestamp in MongoDB
-      await mongoClient.connect();
-      const db = mongoClient.db('cache');
-      const cacheCollection = db.collection('cache');
-  
-      await cacheCollection.insertOne({ userId, statusCode, timestamp });
-  
-      res.json(newUser.rows[0]);
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: 'Server error' });
-    } finally {
-      await mongoClient.close();
-      await redisClient.quit();
+app.post("/login", async (req, res) => {
+  const password = req.body.password;
+  const email = req.body.email;
+
+  try {
+    const user = await pool.query(
+      `SELECT * FROM users WHERE email = $1`,
+      [email]
+    );
+
+    if (user.rows.length === 0) {
+      console.log("Incorrect email or password");
+      res.send("Incorrect Email");
+      return;
     }
-  });
+
+    let match = false
+    if(password === user.rows[0].password){
+      match=true;
+    }
+    if (!match) {
+      console.log("Incorrect password");
+      res.send("Incorrect Password");
+      return;
+    }
+
+    const statusCode = 200;
+    const userId = user.rows[0].id;
+    const timestamp = new Date().toISOString();
+
+    // Store cache in Redis
+    const cacheKey = `login:${userId}`;
+    const cacheData = JSON.stringify({ timestamp, userId, statusCode });
+
+    redisClient.setex(cacheKey, 3600, cacheData, (err, reply) => {
+      if (err) {
+        console.error('Error storing cache in Redis:', err);
+      } else {
+        console.log('Cache stored in Redis:', reply);
+      }
+    });
+
+    // Store cache in MongoDB
+    await mongoClient.connect();
+    const db = mongoClient.db('cache');
+    const cacheCollection = db.collection('cache');
+
+    await cacheCollection.insertOne({ userId, statusCode, timestamp });
+
+    console.log("Successfully logged in");
+    res.send("Login");
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ error: "Server error" });
+  } finally {
+    await mongoClient.close();
+    redisClient.quit();
+  }
+});
 
 
 
@@ -110,7 +135,7 @@ app.delete('/users/:id', async (req, res) => {
 });
 
 // Start the server
-const port = 3001;
+const port = 3000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
