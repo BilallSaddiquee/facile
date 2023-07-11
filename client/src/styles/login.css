@@ -1,0 +1,89 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .top {
+    border-radius: 10px; 
+    color: white; 
+    background-color: #2f7df6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .logo img {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+  }
+  
+  .input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .input input {
+    margin-bottom: 20px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 300px;
+  }
+  
+  .forgot-password {
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+  .input a{
+      color: black;
+      text-decoration:none ;
+  }
+  .input a:hover{
+      color: grey;
+      text-decoration: underline;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #2f7df6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 15px;
+  }
+  button:hover{
+      background-color: #072e69;
+      color: grey;
+  }
+  
+  .using{
+      text-align: center;
+  }
+  
+  .socials {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .socials img {
+    width: 50px;
+    height: 50px;
+    margin: 0 5px;
+  }
+  
