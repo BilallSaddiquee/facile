@@ -25,6 +25,10 @@ function SignUp() {
     const [errCN, seterrCN] = useState(false);
 
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(email);
+      };
 
   //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
   //after that calling post api to send data in database using axios
@@ -74,7 +78,7 @@ function SignUp() {
         console.log(response);
       });
     }
-
+  }
   //Set value and check errors of Email using regex
   const EmailHandler = (e) => {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
@@ -319,6 +323,6 @@ function SignUp() {
       </div>
     </div>
   );
-}
 
+}
 export default SignUp;
