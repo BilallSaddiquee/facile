@@ -3,7 +3,7 @@ const app = express();
 const pool = require('./helper/dbConfig');
 const Redis = require('ioredis');
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = 'mongodb://localhost:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
 
