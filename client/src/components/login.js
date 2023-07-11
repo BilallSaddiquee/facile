@@ -22,19 +22,19 @@ function Login() {
       axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
-      }).then((response) => {
+      }).then((res) => {
 
-        if (response.data === "Incorrect Email") {
+        if (res.data === "Incorrect Email") {
           setcheckE(true);
           //errors.email = "Invalid Email and Password";
           setcheckP(false)
           //setlogin_S(0)
         }
-        else if (response.data === "Incorrect Password") {
+        else if (res.data === "Incorrect Password") {
           setcheckE(false)
           setcheckP(true);
         }
-        else if (response.data === "Login") {
+        else if (res.data === "Login") {
           setcheckP(false);
           setcheckE(false);
           setEmailerr(false);
