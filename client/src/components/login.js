@@ -5,8 +5,10 @@ import img3 from '../images/instagram.png';
 import img4 from '../images/Linkdin.png';
 import img5 from '../images/logo.png';
 
+
 import "../styles/login.css"
 function login(){
+
     return(
         <div class="container">
         <div class="top">
@@ -27,9 +29,9 @@ function login(){
             <p>Log in using</p>
         </div>
         <div class="socials">
-            <img src="images/Linkdin logo.png" alt="" />
-            <img src="images/instagram logo.png" alt="" />
-            <img src="images/Facebook logo.png" alt="" />
+            <img src={img4} alt="" />
+            <img src={img3} alt="" />
+            <img src={img1} alt="" />
         </div>
     </div>
     );
