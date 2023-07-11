@@ -1,15 +1,17 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const app = express();
-const pool = require('./dbConfig');
+const pool = require('./helper/dbConfig');
 const Redis = require('ioredis');
+const cors = require('cors')
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = 'mongodb://127.0.0.1:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
 
 // Middleware
 app.use(express.json());
-
+app.use(cors());
 // Routes
 // Get all users
 app.get('/users', async (req, res) => {
@@ -48,14 +50,14 @@ app.post('/signup', async (req, res) => {
     if (emailExists.rows.length > 0) {
       return res.status(400).json({ error: 'Email already exists' });
     }
-    
-    // Create a new user
-    const newUser = await pool.query(
-      'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, email, password, contact]
-    );
-
-    res.json(newUser.rows[0]);
+    let newUser;
+    bcrypt.hash(password, 10).then(async (hash) => {
+        newUser = await pool.query(
+        'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
+        [name, email, hash, contact]
+      );
+     res.json(newUser.rows[0]);
+  });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: 'Server error' });
@@ -66,7 +68,7 @@ app.post('/signup', async (req, res) => {
 app.post("/login", async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
-
+console.log(email,password)
   try {
     const user = await pool.query(
       `SELECT * FROM users WHERE email = $1`,
@@ -79,23 +81,22 @@ app.post("/login", async (req, res) => {
       return;
     }
 
-    let match = false
-    if(password === user.rows[0].password){
-      match=true;
-    }
+    const match = await bcrypt.compare(password, user.rows[0].password);
     if (!match) {
       console.log("Incorrect password");
-      res.send("Incorrect Password");
+     res.send("Incorrect Password");
       return;
     }
 
+
     const statusCode = 200;
     const userId = user.rows[0].id;
+    const name = user.rows[0].name;
     const timestamp = new Date().toISOString();
 
     // Store cache in Redis
     const cacheKey = `login:${userId}`;
-    const cacheData = JSON.stringify({ timestamp, userId, statusCode });
+    const cacheData = JSON.stringify({ timestamp, userId, statusCode, name });
 
     redisClient.setex(cacheKey, 3600, cacheData, (err, reply) => {
       if (err) {
@@ -110,16 +111,15 @@ app.post("/login", async (req, res) => {
     const db = mongoClient.db('cache');
     const cacheCollection = db.collection('cache');
 
-    await cacheCollection.insertOne({ userId, statusCode, timestamp });
-
-    console.log("Successfully logged in");
-    res.send("Login");
+    await cacheCollection.insertOne({ userId, statusCode, timestamp, name });
+    console.log("successfully Login")         
+      res.send("Login")
   } catch (error) {
     console.error("Login error:", error.message);
-    res.status(500).json({ error: "Server error" });
+    //res.status(500).json({ error: "Server error" });
   } finally {
-    await mongoClient.close();
-    redisClient.quit();
+    //await mongoClient.close();
+    //redisClient.quit();
   }
 });
 

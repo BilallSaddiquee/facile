@@ -1,16 +1,89 @@
-import react from 'react';
+import react, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import img1 from '../images/Facebook.png';
-import img3 from '../images/instagram.png';
-import img4 from '../images/Linkdin.png';
+import img1 from "../images/Facebook.png";
+import img3 from "../images/instagram.png";
+import img4 from "../images/Linkdin.png";
 import img2 from "../images/signinlogo.png";
+import axios from "axios";
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPass] = useState("");
 
-    return (
-        <>
-            <style>
-                {
-                    `                    
+  const [emailerr, setEmailerr] = useState(false);
+  const [passerr, setPasserr] = useState(false);
+  const [error, seterr] = useState(false);
+  const [checkemail, setcheckE] = useState(false)
+  const [checkpass, setcheckP] = useState(false)
+
+
+  function login() {
+    if (email !== "" && password !== "") {
+
+      axios.post("http://localhost:3000/login", {
+        email: email,
+        password: password,
+      }).then((res) => {
+
+        if (res.data === "Incorrect Email") {
+          setcheckE(true);
+          //errors.email = "Invalid Email and Password";
+          setcheckP(false)
+          //setlogin_S(0)
+        }
+        else if (res.data === "Incorrect Password") {
+          setcheckE(false)
+          setcheckP(true);
+        }
+        else if (res.data === "Login") {
+          setcheckP(false);
+          setcheckE(false);
+          setEmailerr(false);
+          setPasserr(false);
+          localStorage.setItem('email_token', email)
+      //    setEMAIL(email);
+        
+        }
+
+      })
+    }
+    else {
+      setEmailerr(true)
+      setPasserr(true)
+    }
+  };
+
+
+
+
+  //Set value and check errors of Email using regex
+  const EmailHandler = (e) => {
+    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+
+    setEmail(e.target.value);
+    if (e.target.value === "") {
+      setEmailerr(true);
+      seterr("Email is Required");
+    } else if (!regex.test(e.target.value)) {
+      setEmailerr(true);
+      seterr("Invalid Email");
+    } else {
+      setEmailerr(false);
+    }
+  };
+
+  const passHandler = (e) => {
+    setPass(e.target.value);
+    if (e.target.value.length < 8) {
+      setPasserr(true);
+    } else {
+      setPasserr(false);
+    }
+  };
+
+  return (
+    <>
+      <style>
+        {`                    
 body {
     display: flex;
     flex-direction: column;
@@ -113,36 +186,58 @@ body {
     margin: 0 10px;
   }
   
-                    `
-                }
-            </style>
-            <div className="container-fluid">
-                <div className="top1">
-                    <div className="logo1">
-                        <img src={img2} alt="" />
-                    </div>
-                    <div className="name1">
-                        <h1>Welcome To Fecile</h1>
-                    </div>
-                </div>
-                <div className="input1">
-                    <input type="email" placeholder="Email" required />
-                    <input type="password" placeholder="Password" required />
-                    <a href="">forgot password?</a>
-                    <button>Sign In</button>
-                    <p>Don't have a account? <Link to="/">SignUp</Link></p>
-                </div>
-                <div className="using1">
-                    <p>Log in using</p>
-                </div>
-                <div className="socials1">
-                    <img src={img4} alt="" />
-                    <img src={img3} alt="" />
-                    <img src={img1} alt="" />
-                </div>
-            </div>
-        </>
-    );
+                    `}
+      </style>
+      <div className="container-fluid">
+        <div className="top1">
+          <div className="logo1">
+            <img src={img2} alt="" />
+          </div>
+          <div className="name1">
+            <h1>Welcome To Fecile</h1>
+          </div>
+        </div>
+        <div className="input1">
+          <input
+            type="email"
+            placeholder="Email"
+            autoComplete="on"
+            onChange={EmailHandler}
+            value={email}
+          />
+          {emailerr ? <span style={{ color: "#00ffff" }}>{error}</span> : ""}
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            onChange={passHandler}
+            value={password}
+            autocomplete="on"
+          />
+          {passerr ? (
+            <span style={{ color: "#00ffff" }}>
+              Password must be greater then 8
+            </span>
+          ) : (
+            ""
+          )}
+          <a href="">forgot password?</a>
+          <button onClick={login}>Sign In</button>
+          <p>
+            Don't have a account <Link to="/">SIGN In</Link>
+          </p>
+        </div>
+        <div className="using1">
+          <p>Log in using</p>
+        </div>
+        <div className="socials1">
+          <img src={img4} alt="" />
+          <img src={img3} alt="" />
+          <img src={img1} alt="" />
+        </div>
+      </div>
+    </>
+  );
 }
 
 export default Login;
