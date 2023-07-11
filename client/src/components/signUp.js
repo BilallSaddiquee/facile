@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import img1 from "../images/Facebook.png";
 import img2 from "../images/Illustration.png";
@@ -6,7 +6,7 @@ import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
 import img5 from "../images/logo.png";
 import "../styles/signup.css";
-import Axios from "axios"
+import Axios from "axios";
 function SignUp() {
   const navigate = useNavigate();
 
@@ -23,6 +23,8 @@ function SignUp() {
   const [errCP, seterrCP] = useState(false);
   const [errE, seterrE] = useState(false);
   const [errCN, seterrCN] = useState(false);
+ 
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -64,7 +66,7 @@ function SignUp() {
       seterrCN(false);
       seterrCP(false);
       seterrP(false);
-      console.log(name,email,password,contact_number)
+      console.log(name, email, password, contact_number);
       Axios.post("http://localhost:3000/signUp", {
         name: name,
         password: password,
@@ -141,6 +143,95 @@ function SignUp() {
     }
   };
 
+
+//CODE OF WEB RTC
+//   const [videoStream, setVideoStream] = useState(null);
+//   const videoRef = useRef(null);
+//   const canvasRef = useRef(null);
+
+//   const [isStreaming, setIsStreaming] = useState(false);
+//   const [capturedImage, setCapturedImage] = useState("");
+
+//   useEffect(() => {
+//     const constraints = { video: true };
+
+//     const startVideoStream = async () => {
+//       try {
+//         const stream = await navigator.mediaDevices.getUserMedia(constraints);
+//         setVideoStream(stream);
+//         if (videoRef.current) {
+//           videoRef.current.srcObject = stream;
+//         }
+//       } catch (error) {
+//         console.error("Error accessing camera:", error);
+//       }
+//     };
+
+//     const stopVideoStream = () => {
+//       if (videoStream) {
+//         videoStream.getTracks().forEach((track) => {
+//           track.stop();
+//         });
+//         setVideoStream(null);
+//       }
+//     };
+
+//     if (isStreaming) {
+//       startVideoStream();
+//     } else {
+//       stopVideoStream();
+//     }
+
+//     return () => {
+//       stopVideoStream();
+//     };
+//   }, [isStreaming]);
+
+//   const captureImage = () => {
+//     const video = videoRef.current;
+//     const canvas = canvasRef.current;
+//     canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+//     const imageData = canvas.toDataURL("image/png");
+//     console.log("Captured image:", imageData);
+//     setCapturedImage(imageData);
+
+//   };
+
+//   const toggleStream = () => {
+//     setIsStreaming((prevStreaming) => !prevStreaming);
+//   };
+
+//   <video
+//   style={{
+//     height: "150px",
+//     width: "250px",
+//     marginLeft: "70px",
+//     marginTop: "20px",
+//   }}
+//   ref={videoRef}
+//   autoPlay
+//   playsInline
+// />
+// <img
+//   style={{
+//     height: "150px",
+//     width: "230px",
+//     marginLeft: "30px",
+//     marginTop: "20px",
+//   }}
+//   src={capturedImage}
+//   alt="Captured"
+// />
+// <canvas ref={canvasRef} style={{ display: "none" }} />
+// <div>
+//   <button className="register-btn" onClick={captureImage}>Capture Image</button>
+//   {isStreaming ? (
+//     <button type="button"  onClick={toggleStream}>Stop Stream</button>
+//   ) : (
+//     <button type="button" onClick={toggleStream}>Start Stream</button>
+//   )}
+// </div>
+
   return (
     <div className="container">
       <div className="illu">
@@ -210,8 +301,10 @@ function SignUp() {
             ""
           )}
           <div className="buttons-row">
-            <button type="submit" onClick={register}>Sign Up</button>
-            <button type="button">Face Auth</button>
+            <button type="submit" onClick={register}>
+              Sign Up
+            </button>
+            <button >Face Auth</button>
           </div>
         </form>
         <div className="form-separator">
