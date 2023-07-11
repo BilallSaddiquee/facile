@@ -313,7 +313,7 @@ function SignUp() {
           <p>OR</p>
         </div>
         <div className="login-through">
-          <p>Login through</p>
+          <p>Login through <Link to="/login">Log In</Link></p>
         </div>
         <div className="logos-row">
           <img src={img4} alt="Logo 1" />

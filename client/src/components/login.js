@@ -56,12 +56,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 7px;
   }
   
   .input1 input {
     margin-bottom: 20px;
-    padding: 8px;
+    padding: 12px;
     border-radius: 4px;
     border: 1px solid #ccc;
     width: 300px;
@@ -104,13 +104,13 @@ body {
   .socials1 {
     display: flex;
     justify-content: center;
-    margin-top: 5px;
+    margin-top: 0px;
   }
   
   .socials1 img {
     width: 50px;
     height: 50px;
-    margin: 0 5px;
+    margin: 0 10px;
   }
   
                     `
@@ -130,7 +130,7 @@ body {
                     <input type="password" placeholder="Password" required />
                     <a href="">forgot password?</a>
                     <button>Sign In</button>
-                    <p>Don't have a account <Link to="/">SIGN In</Link></p>
+                    <p>Don't have a account? <Link to="/">SignUp</Link></p>
                 </div>
                 <div className="using1">
                     <p>Log in using</p>

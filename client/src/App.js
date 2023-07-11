@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import SignUp from "./components/SignUp";
-import Loginpg from "./components/Login";
+import Login from "./components/Login";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
      <BrowserRouter>
       <Routes>     
       <Route path="/" element={<SignUp />}></Route> 
-      <Route path="/login" element={<Loginpg />}></Route> 
+      <Route path="/login" element={<Login />}></Route> 
        
       </Routes>
      </BrowserRouter>
