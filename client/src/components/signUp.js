@@ -1,5 +1,4 @@
-
-import react from 'react';
+import react, {useState} from 'react';
 import img1 from '../images/Facebook.png';
 import img2 from '../images/Illustration.png';
 import img3 from '../images/instagram.png';
@@ -8,6 +7,15 @@ import img5 from '../images/logo.png';
 
 import "../styles/signup.css"
 function signUp(){
+
+    const [modal, setModal] = useState(false);
+
+    const toggleModal = () =>{
+        setModal(!modal)
+    }
+
+
+
     return (
         <div class="container">
             <div class="illu">
@@ -29,7 +37,7 @@ function signUp(){
                     <input type="password" placeholder="Confirm Password" required/>
                     <input type="tel" placeholder="Phone No." required/>
                     <div class="buttons-row">
-                        <button type="submit">Sign Up</button>
+                        <button type="submit" onClick={toggleModal}>Sign Up</button>
                         <button type="button">Face Auth</button>
                     </div>
                 </form>
