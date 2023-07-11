@@ -14,7 +14,7 @@ function SignUp() {
     const [password, setPass] = useState("");
     const [Cpassword, setCPass] = useState("");
     const [name, setName] = useState("");
-    const [contact_number, setcontact] = useState("");
+    const [contact, setcontact] = useState("");
     const [err, seterr] = useState("");
     const [checkEmail, setCheck] = useState("");
 
@@ -52,8 +52,8 @@ function SignUp() {
       seterrE(true);
       seterr("Email Already Exist");
     } else if (
-      contact_number.length < 11 ||
-      /^\d+$/.test(contact_number) === false
+      contact.length < 11 ||
+      /^\d+$/.test(contact) === false
     ) {
       seterrCN(true);
     } else if (password.length < 8) {
@@ -67,11 +67,11 @@ function SignUp() {
       seterrCN(false);
       seterrCP(false);
       seterrP(false);
-      console.log(name, email, password, contact_number);
+      console.log(name, email, password, contact);
       Axios.post("http://localhost:3000/signUp", {
         name: name,
         password: password,
-        contact_number: contact_number,
+        contact: contact,
         email: email,
         //image:capturedImage
       }).then((response) => {
@@ -295,7 +295,7 @@ function SignUp() {
             type="tel"
             placeholder="Phone No."
             onChange={contactHandler}
-            value={contact_number}
+            value={contact}
           />
           {errCN ? (
             <span style={{ color: "#00ffff" }}>Invalid Contact Number</span>
