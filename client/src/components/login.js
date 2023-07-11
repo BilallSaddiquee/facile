@@ -3,7 +3,7 @@ import img1 from '../images/Facebook.png';
 import img3 from '../images/instagram.png';
 import img4 from '../images/Linkdin.png';
 import "../styles/login.css"
-function login() {
+function Login() {
 
 
         return (
@@ -35,4 +35,4 @@ function login() {
         );
     }
 
-export default login;
+export default Login;
