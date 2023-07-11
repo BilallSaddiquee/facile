@@ -3,13 +3,13 @@ const app = express();
 const pool = require('./dbConfig');
 const Redis = require('ioredis');
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://localhost:27017';
+const mongoUrl = 'mongodb://127.0.0.1:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
-
+var cors = require('cors');
 // Middleware
 app.use(express.json());
-
+app.use(cors());
 // Routes
 // Get all users
 app.get('/users', async (req, res) => {
@@ -82,6 +82,8 @@ app.post("/login", async (req, res) => {
     let match = false
     if(password === user.rows[0].password){
       match=true;
+      console.log("successfully Login")         
+      res.send("Login")
     }
     if (!match) {
       console.log("Incorrect password");
@@ -118,8 +120,8 @@ app.post("/login", async (req, res) => {
     console.error("Login error:", error.message);
     res.status(500).json({ error: "Server error" });
   } finally {
-    await mongoClient.close();
-    redisClient.quit();
+//    await mongoClient.close();
+  //  redisClient.quit();
   }
 });
 
