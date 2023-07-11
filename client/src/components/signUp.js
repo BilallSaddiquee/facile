@@ -1,3 +1,4 @@
+
 import react from 'react';
 import img1 from '../images/Facebook.png';
 import img2 from '../images/Illustration.png';
@@ -46,6 +47,6 @@ function signUp(){
                 </div>
         </div>
     );
-}
 
-export default signUp
+    }
+export default signUp;
