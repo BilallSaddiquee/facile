@@ -49,11 +49,11 @@ body {
     align-self: flex-end;
   }
   .input a{
-      color: black;
+      color: #2f7df6;
       text-decoration:none ;
   }
   .input a:hover{
-      color: grey;
+      color: rgb(57, 9, 119);
       text-decoration: underline;
   }
   
