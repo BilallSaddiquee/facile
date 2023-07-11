@@ -31,6 +31,8 @@ function SignUp() {
     console.log(email);
   };
 
+  //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
+  //after that calling post api to send data in database using axios
   const register = () => {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     // Axios.post("http://localhost:3006/getEmail", {
@@ -79,6 +81,7 @@ function SignUp() {
     }
   };
 
+  //Set value and check errors of Email using regex
   const EmailHandler = (e) => {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
 
@@ -102,8 +105,8 @@ function SignUp() {
     } else {
       seterrE(false);
     }
-  };
-
+  }
+//Set value and check errors of Password
   const passHandler = (e) => {
     setPass(e.target.value);
     if (e.target.value.length < 8) {
@@ -112,7 +115,7 @@ function SignUp() {
       seterrP(false);
     }
   };
-
+//Set value and check errors of Name
   const nameHandler = (e) => {
     setName(e.target.value);
     if (e.target.value === "") {
@@ -121,7 +124,7 @@ function SignUp() {
       seterrN(false);
     }
   };
-
+//Set value and check errors of Contact using regex
   const contactHandler = (e) => {
     const re = /^[0-9\b]+$/;
     if (re.test(e.target.value) && e.target.value.length <= 11) {
@@ -132,6 +135,7 @@ function SignUp() {
     }
   };
 
+//Set values and matching with password also check errors  
   const CpassHandler = (e) => {
     setCPass(e.target.value);
     if (e.target.value === "") {
