@@ -1,0 +1,24 @@
+[{
+  "_id": {
+    "$oid": "64abe67ca357521a69a3b733"
+  },
+  "userId": 10,
+  "statusCode": 200,
+  "timestamp": "2023-07-10T11:07:40.064Z"
+},
+{
+  "_id": {
+    "$oid": "64abeb8a1caa6837e8d1fb6d"
+  },
+  "userId": 12,
+  "statusCode": 200,
+  "timestamp": "2023-07-10T11:29:14.932Z"
+},
+{
+  "_id": {
+    "$oid": "64abf3fd82b6a620b5a60a22"
+  },
+  "userId": 3,
+  "statusCode": 200,
+  "timestamp": "2023-07-10T12:05:17.172Z"
+}]
