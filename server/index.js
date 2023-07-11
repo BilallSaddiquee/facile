@@ -48,7 +48,7 @@ app.post('/signup', async (req, res) => {
     if (emailExists.rows.length > 0) {
       return res.status(400).json({ error: 'Email already exists' });
     }
-
+    
     // Create a new user
     const newUser = await pool.query(
       'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
