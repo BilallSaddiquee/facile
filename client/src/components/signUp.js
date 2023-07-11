@@ -1,4 +1,4 @@
-import React, { useState, useRef,useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import img1 from "../images/Facebook.png";
 import img2 from "../images/Illustration.png";
@@ -8,28 +8,23 @@ import img5 from "../images/logo.png";
 import "../styles/signup.css";
 import Axios from "axios";
 function SignUp() {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPass] = useState("");
-  const [Cpassword, setCPass] = useState("");
-  const [name, setName] = useState("");
-  const [contact_number, setcontact] = useState("");
-  const [err, seterr] = useState("");
-  const [checkEmail, setCheck] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPass] = useState("");
+    const [Cpassword, setCPass] = useState("");
+    const [name, setName] = useState("");
+    const [contact_number, setcontact] = useState("");
+    const [err, seterr] = useState("");
+    const [checkEmail, setCheck] = useState("");
 
-  const [errN, seterrN] = useState(false);
-  const [errP, seterrP] = useState(false);
-  const [errCP, seterrCP] = useState(false);
-  const [errE, seterrE] = useState(false);
-  const [errCN, seterrCN] = useState(false);
- 
+    const [errN, seterrN] = useState(false);
+    const [errP, seterrP] = useState(false);
+    const [errCP, seterrCP] = useState(false);
+    const [errE, seterrE] = useState(false);
+    const [errCN, seterrCN] = useState(false);
 
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(email);
-  };
 
   //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
   //after that calling post api to send data in database using axios
@@ -79,7 +74,6 @@ function SignUp() {
         console.log(response);
       });
     }
-  };
 
   //Set value and check errors of Email using regex
   const EmailHandler = (e) => {
