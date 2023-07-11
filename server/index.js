@@ -6,7 +6,8 @@ const { MongoClient } = require('mongodb');
 const mongoUrl = 'mongodb://0.0.0.0:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
-
+var cors = require("cors");
+app.use(cors());
 // Middleware
 app.use(express.json());
 
@@ -99,8 +100,11 @@ app.post("/login", async (req, res) => {
 });
 
 
-app.post('/users', async (req, res) => {
-  const { name, email, password, contact } = req.body;
+app.post('/signUp', async (req, res) => {
+  const name = req.body.name;
+  const contact = req.body.contact_number;
+  const password = req.body.password;
+  const email = req.body.email;
   try {
     const newUser = await pool.query(
       'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
