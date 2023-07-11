@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-const pool = require('./dbConfig');
+const pool = require('./helper/dbConfig');
 const Redis = require('ioredis');
 const { MongoClient } = require('mongodb');
 const mongoUrl = 'mongodb://localhost:27017';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
+
 
 // Middleware
 app.use(express.json());
@@ -48,7 +49,7 @@ app.post('/signup', async (req, res) => {
     if (emailExists.rows.length > 0) {
       return res.status(400).json({ error: 'Email already exists' });
     }
-    
+
     // Create a new user
     const newUser = await pool.query(
       'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
@@ -91,11 +92,12 @@ app.post("/login", async (req, res) => {
 
     const statusCode = 200;
     const userId = user.rows[0].id;
+    const name = user.rows[0].name;
     const timestamp = new Date().toISOString();
 
     // Store cache in Redis
     const cacheKey = `login:${userId}`;
-    const cacheData = JSON.stringify({ timestamp, userId, statusCode });
+    const cacheData = JSON.stringify({ timestamp, userId, statusCode, name });
 
     redisClient.setex(cacheKey, 3600, cacheData, (err, reply) => {
       if (err) {
@@ -110,7 +112,7 @@ app.post("/login", async (req, res) => {
     const db = mongoClient.db('cache');
     const cacheCollection = db.collection('cache');
 
-    await cacheCollection.insertOne({ userId, statusCode, timestamp });
+    await cacheCollection.insertOne({ userId, statusCode, timestamp, name });
 
     console.log("Successfully logged in");
     res.send("Login");
