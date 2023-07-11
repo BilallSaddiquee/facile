@@ -3,11 +3,10 @@ const app = express();
 const pool = require('./dbConfig');
 const Redis = require('ioredis');
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://0.0.0.0:27017/';
+const mongoUrl = 'mongodb://localhost:27017';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
-var cors = require("cors");
-app.use(cors());
+
 // Middleware
 app.use(express.json());
 
@@ -32,6 +31,31 @@ app.get('/users/:id', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     res.json(user.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// Sign up
+app.post('/signup', async (req, res) => {
+  const { name, email, password, contact } = req.body;
+
+  try {
+    // Check if the email already exists
+    const emailExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (emailExists.rows.length > 0) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+
+    // Create a new user
+    const newUser = await pool.query(
+      'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
+      [name, email, password, contact]
+    );
+
+    res.json(newUser.rows[0]);
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: 'Server error' });
@@ -100,22 +124,7 @@ app.post("/login", async (req, res) => {
 });
 
 
-app.post('/signUp', async (req, res) => {
-  const name = req.body.name;
-  const contact = req.body.contact_number;
-  const password = req.body.password;
-  const email = req.body.email;
-  try {
-    const newUser = await pool.query(
-      'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, email, password, contact]
-    );
-    res.json(newUser.rows[0]);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
+
 // Update an existing user
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
