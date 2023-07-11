@@ -3,15 +3,15 @@ const bcrypt = require('bcrypt');
 const app = express();
 const pool = require('./helper/dbConfig');
 const Redis = require('ioredis');
+const cors = require('cors')
 const { MongoClient } = require('mongodb');
-const mongoUrl = 'mongodb://localhost:27017/';
+const mongoUrl = 'mongodb://127.0.0.1:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
 
-
 // Middleware
 app.use(express.json());
-
+app.use(cors());
 // Routes
 // Get all users
 app.get('/users', async (req, res) => {
@@ -68,7 +68,7 @@ app.post('/signup', async (req, res) => {
 app.post("/login", async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
-
+console.log(email,password)
   try {
     const user = await pool.query(
       `SELECT * FROM users WHERE email = $1`,
@@ -84,7 +84,7 @@ app.post("/login", async (req, res) => {
     const match = await bcrypt.compare(password, user.rows[0].password);
     if (!match) {
       console.log("Incorrect password");
-      res.send("Incorrect Password");
+     res.send("Incorrect Password");
       return;
     }
 
@@ -112,12 +112,11 @@ app.post("/login", async (req, res) => {
     const cacheCollection = db.collection('cache');
 
     await cacheCollection.insertOne({ userId, statusCode, timestamp, name });
-
-    console.log("Successfully logged in");
-    res.send("Login");
+    console.log("successfully Login")         
+      res.send("Login")
   } catch (error) {
     console.error("Login error:", error.message);
-    res.status(500).json({ error: "Server error" });
+    //res.status(500).json({ error: "Server error" });
   } finally {
     //await mongoClient.close();
     //redisClient.quit();
