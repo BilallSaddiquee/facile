@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const app = express();
 const pool = require('./helper/dbConfig');
 const Redis = require('ioredis');
@@ -49,14 +50,14 @@ app.post('/signup', async (req, res) => {
     if (emailExists.rows.length > 0) {
       return res.status(400).json({ error: 'Email already exists' });
     }
-
-    // Create a new user
-    const newUser = await pool.query(
-      'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, email, password, contact]
-    );
-
-    res.json(newUser.rows[0]);
+    let newUser;
+    bcrypt.hash(password, 10).then(async (hash) => {
+        newUser = await pool.query(
+        'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
+        [name, email, hash, contact]
+      );
+     res.json(newUser.rows[0]);
+  });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: 'Server error' });
@@ -80,15 +81,13 @@ app.post("/login", async (req, res) => {
       return;
     }
 
-    let match = false
-    if(password === user.rows[0].password){
-      match=true;
-    }
+    const match = await bcrypt.compare(password, user.rows[0].password);
     if (!match) {
       console.log("Incorrect password");
       res.send("Incorrect Password");
       return;
     }
+
 
     const statusCode = 200;
     const userId = user.rows[0].id;
@@ -120,8 +119,8 @@ app.post("/login", async (req, res) => {
     console.error("Login error:", error.message);
     res.status(500).json({ error: "Server error" });
   } finally {
-    await mongoClient.close();
-    redisClient.quit();
+    //await mongoClient.close();
+    //redisClient.quit();
   }
 });
 
