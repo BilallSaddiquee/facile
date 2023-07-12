@@ -7,34 +7,28 @@ import img4 from "../images/Linkdin.png";
 import img5 from "../images/logo.png";
 import "../styles/signup.css";
 import Axios from "axios";
-import Login from '../components/Login';
-
+import Login from "./Login";
 
 function SignUp() {
+  const [openModal, setOpenModal] = useState(false);
 
-    const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPass] = useState("");
+  const [Cpassword, setCPass] = useState("");
+  const [name, setName] = useState("");
+  const [contact, setcontact] = useState("");
 
-    const [email, setEmail] = useState("");
-    const [password, setPass] = useState("");
-    const [Cpassword, setCPass] = useState("");
-    const [name, setName] = useState("");
-    const [contact, setcontact] = useState("");
-    const [err, seterr] = useState("");
-    const [checkEmail, setCheck] = useState("");
+  const [checkEmail, setCheck] = useState("");
 
-    const [errN, seterrN] = useState(false);
-    const [errP, seterrP] = useState(false);
-    const [errCP, seterrCP] = useState(false);
-    const [errE, seterrE] = useState(false);
-    const [errCN, seterrCN] = useState(false);
+  const [err, seterr] = useState(false);
+  const [errors, setErrors] = useState("");
 
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(email);
-      };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(email);
+  };
 
   //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
   //after that calling post api to send data in database using axios
@@ -47,32 +41,32 @@ function SignUp() {
     //     setCheck(response.data);
     //   });
     if (name === "") {
-      seterrN(true);
+      setErrors("Name is Required");
+      seterr(true);
     } else if (email === "") {
-      seterrE(true);
-      seterr("Email is Required");
+      setErrors("Email is Required");
+      seterr(true);
+      //seterr("Email is Required");
     } else if (!regex.test(email)) {
-      seterrE(true);
-      seterr("Invalid Email");
+      setErrors("Invalid Email");
+
+      // seterr("Invalid Email");
     } else if (checkEmail === "already") {
-      seterrE(true);
-      seterr("Email Already Exist");
-    } else if (
-      contact.length < 11 ||
-      /^\d+$/.test(contact) === false
-    ) {
-      seterrCN(true);
+      setErrors("Email Already Exist");
+      seterr(true);
+      // seterr("Email Already Exist");
     } else if (password.length < 8) {
-      seterrP(true);
+      setErrors("Password must be greater then 8");
+      seterr(true);
     } else if (password !== Cpassword) {
-      seterrCP(true);
+      setErrors("Password Desn't Match");
+      seterr(true);
+    } else if (contact.length < 11 || /^\d+$/.test(contact) === false) {
+      setErrors("Invalid Contact Number");
+      seterr(true);
     } else {
-      seterrP(false);
-      seterr("");
-      seterrN(false);
-      seterrCN(false);
-      seterrCP(false);
-      seterrP(false);
+      seterr(false);
+      setErrors("");
       console.log(name, email, password, contact);
       Axios.post("http://localhost:3000/signUp", {
         name: name,
@@ -82,9 +76,10 @@ function SignUp() {
         //image:capturedImage
       }).then((response) => {
         console.log(response);
+        navigate('/login');
       });
     }
-  }
+  };
   //Set value and check errors of Email using regex
   const EmailHandler = (e) => {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
@@ -98,147 +93,154 @@ function SignUp() {
     // });
 
     if (e.target.value === "") {
-      seterrP(true);
-      seterr("Email is Required");
+      //seterr("Email is Required");
+      setErrors("Email is Required");
+      seterr(true);
     } else if (!regex.test(e.target.value)) {
-      seterrE(true);
-      seterr("Invalid Email");
+      // seterr("Invalid Email");
+      setErrors("Invalid Email");
+      seterr(true);
     } else if (checkEmail === "already") {
-      seterrE(true);
-      seterr("Email Already Exist");
+      // seterr("Email Already Exist");
+      setErrors("Email Already Exist");
+      seterr(true);
     } else {
-      seterrE(false);
+      seterr(false);
     }
-  }
-//Set value and check errors of Password
+  };
+  //Set value and check errors of Password
   const passHandler = (e) => {
     setPass(e.target.value);
     if (e.target.value.length < 8) {
-      seterrP(true);
+      seterr(true);
+      setErrors("Password must be greater then 8");
     } else {
-      seterrP(false);
+      seterr(false);
     }
   };
-//Set value and check errors of Name
+  //Set value and check errors of Name
   const nameHandler = (e) => {
     setName(e.target.value);
     if (e.target.value === "") {
-      seterrN(true);
+      setErrors("Name is Required");
+      seterr(true);
     } else {
-      seterrN(false);
+      seterr(false);
     }
   };
-//Set value and check errors of Contact using regex
+  //Set value and check errors of Contact using regex
   const contactHandler = (e) => {
     const re = /^[0-9\b]+$/;
     if (re.test(e.target.value) && e.target.value.length <= 11) {
       setcontact(e.target.value);
-      seterrCN(true);
+      setErrors("Invalid Contact Number");
+      seterr(true);
     } else {
-      seterrCN(false);
+      seterr(false);
     }
   };
 
-//Set values and matching with password also check errors  
+  //Set values and matching with password also check errors
   const CpassHandler = (e) => {
     setCPass(e.target.value);
     if (e.target.value === "") {
-      seterrCP(true);
+      seterr(true);
+      setErrors("Confirm Password Required");
     } else if (password !== e.target.value) {
-      seterrCP(true);
+      setErrors("Password Desn't Match");
+      seterr(true);
     } else {
-      seterrCP(false);
+      seterr(false);
     }
   };
 
+  //CODE OF WEB RTC
+  //   const [videoStream, setVideoStream] = useState(null);
+  //   const videoRef = useRef(null);
+  //   const canvasRef = useRef(null);
 
-//CODE OF WEB RTC
-//   const [videoStream, setVideoStream] = useState(null);
-//   const videoRef = useRef(null);
-//   const canvasRef = useRef(null);
+  //   const [isStreaming, setIsStreaming] = useState(false);
+  //   const [capturedImage, setCapturedImage] = useState("");
 
-//   const [isStreaming, setIsStreaming] = useState(false);
-//   const [capturedImage, setCapturedImage] = useState("");
+  //   useEffect(() => {
+  //     const constraints = { video: true };
 
-//   useEffect(() => {
-//     const constraints = { video: true };
+  //     const startVideoStream = async () => {
+  //       try {
+  //         const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  //         setVideoStream(stream);
+  //         if (videoRef.current) {
+  //           videoRef.current.srcObject = stream;
+  //         }
+  //       } catch (error) {
+  //         console.error("Error accessing camera:", error);
+  //       }
+  //     };
 
-//     const startVideoStream = async () => {
-//       try {
-//         const stream = await navigator.mediaDevices.getUserMedia(constraints);
-//         setVideoStream(stream);
-//         if (videoRef.current) {
-//           videoRef.current.srcObject = stream;
-//         }
-//       } catch (error) {
-//         console.error("Error accessing camera:", error);
-//       }
-//     };
+  //     const stopVideoStream = () => {
+  //       if (videoStream) {
+  //         videoStream.getTracks().forEach((track) => {
+  //           track.stop();
+  //         });
+  //         setVideoStream(null);
+  //       }
+  //     };
 
-//     const stopVideoStream = () => {
-//       if (videoStream) {
-//         videoStream.getTracks().forEach((track) => {
-//           track.stop();
-//         });
-//         setVideoStream(null);
-//       }
-//     };
+  //     if (isStreaming) {
+  //       startVideoStream();
+  //     } else {
+  //       stopVideoStream();
+  //     }
 
-//     if (isStreaming) {
-//       startVideoStream();
-//     } else {
-//       stopVideoStream();
-//     }
+  //     return () => {
+  //       stopVideoStream();
+  //     };
+  //   }, [isStreaming]);
 
-//     return () => {
-//       stopVideoStream();
-//     };
-//   }, [isStreaming]);
+  //   const captureImage = () => {
+  //     const video = videoRef.current;
+  //     const canvas = canvasRef.current;
+  //     canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+  //     const imageData = canvas.toDataURL("image/png");
+  //     console.log("Captured image:", imageData);
+  //     setCapturedImage(imageData);
 
-//   const captureImage = () => {
-//     const video = videoRef.current;
-//     const canvas = canvasRef.current;
-//     canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-//     const imageData = canvas.toDataURL("image/png");
-//     console.log("Captured image:", imageData);
-//     setCapturedImage(imageData);
+  //   };
 
-//   };
+  //   const toggleStream = () => {
+  //     setIsStreaming((prevStreaming) => !prevStreaming);
+  //   };
 
-//   const toggleStream = () => {
-//     setIsStreaming((prevStreaming) => !prevStreaming);
-//   };
-
-//   <video
-//   style={{
-//     height: "150px",
-//     width: "250px",
-//     marginLeft: "70px",
-//     marginTop: "20px",
-//   }}
-//   ref={videoRef}
-//   autoPlay
-//   playsInline
-// />
-// <img
-//   style={{
-//     height: "150px",
-//     width: "230px",
-//     marginLeft: "30px",
-//     marginTop: "20px",
-//   }}
-//   src={capturedImage}
-//   alt="Captured"
-// />
-// <canvas ref={canvasRef} style={{ display: "none" }} />
-// <div>
-//   <button className="register-btn" onClick={captureImage}>Capture Image</button>
-//   {isStreaming ? (
-//     <button type="button"  onClick={toggleStream}>Stop Stream</button>
-//   ) : (
-//     <button type="button" onClick={toggleStream}>Start Stream</button>
-//   )}
-// </div>
+  //   <video
+  //   style={{
+  //     height: "150px",
+  //     width: "250px",
+  //     marginLeft: "70px",
+  //     marginTop: "20px",
+  //   }}
+  //   ref={videoRef}
+  //   autoPlay
+  //   playsInline
+  // />
+  // <img
+  //   style={{
+  //     height: "150px",
+  //     width: "230px",
+  //     marginLeft: "30px",
+  //     marginTop: "20px",
+  //   }}
+  //   src={capturedImage}
+  //   alt="Captured"
+  // />
+  // <canvas ref={canvasRef} style={{ display: "none" }} />
+  // <div>
+  //   <button className="register-btn" onClick={captureImage}>Capture Image</button>
+  //   {isStreaming ? (
+  //     <button type="button"  onClick={toggleStream}>Stop Stream</button>
+  //   ) : (
+  //     <button type="button" onClick={toggleStream}>Start Stream</button>
+  //   )}
+  // </div>
 
   return (
     <div className="container">
@@ -254,111 +256,91 @@ function SignUp() {
         <div className="form-header">
           <h2>Create your account</h2>
         </div>
-        <form onSubmit={handleSubmit}>  
-        <div className="input">
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={nameHandler}
-          />
-        </div>  
-          {errN ? (
-            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
-            "font-size": "12px",
-            "text-align": "center",
-            "margin-top": "0",
-            "display": "absolute",
-            "index-z": "-1" }}>Name Is Required</span>
-          ) : (
-            ""
-          )}  
-        <div className="input">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={EmailHandler}
-          />
-        </div>  
-          {errE ? <span className="error-message" style={{ color: "rgb(247, 14, 14)",
-                "font-size": "12px",
+        <form onSubmit={handleSubmit}>
+          <div className="input">
+            <input
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={nameHandler}
+            />
+          </div>
+
+          <div className="input">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={EmailHandler}
+            />
+          </div>
+
+          <div className="input">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={passHandler}
+            />
+          </div>
+
+          <div className="input">
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={Cpassword}
+              onChange={CpassHandler}
+            />
+          </div>
+
+          <div className="input">
+            <input
+              type="tel"
+              placeholder="Phone No."
+              onChange={contactHandler}
+              value={contact}
+            />
+          </div>
+          {err ? (
+            <span
+              className="error-message"
+              style={{
+                color: "rgb(247, 14, 14)",
+                "font-size": "14px",
                 "text-align": "center",
                 "margin-top": "0",
-                "display": "absolute",
-                "index-z": "-1" }}>{err}</span> : ""}
-        
-        <div className="input">  
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={passHandler}
-          />
-        </div>  
-          {errP ? (
-            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
-                "font-size": "12px",
-                "text-align": "center",
-                "margin-top": "0",
-                "display": "absolute",
-                "index-z": "-1" }}>
-              Password must be greater then 8
+                display: "absolute",
+                "index-z": "-1",
+              }}
+            >
+              {errors}
             </span>
           ) : (
             ""
           )}
-        
-        <div className="input">
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            value={Cpassword}
-            onChange={CpassHandler}
-          />
-        </div>  
-          {errCP ? (
-            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
-            "font-size": "12px",
-            "text-align": "center",
-            "margin-top": "0",
-            "display": "absolute",
-            "index-z": "-1" }}>Password Desn't Match</span>
-          ) : (
-            ""
-          )}
-        
-        <div className="input">    
-          <input
-            type="tel"
-            placeholder="Phone No."
-            onChange={contactHandler}
-            value={contact}
-          />
-        </div>  
-          {errCN ? (
-            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
-            "font-size": "12px",
-            "text-align": "center",
-            "margin-top": "0",
-            "display": "absolute",
-            "index-z": "-1" }}>Invalid Contact Number</span>
-          ) : (
-            ""
-          )}
-         
+
           <div className="buttons-row">
             <button type="submit" onClick={register}>
               Sign Up
             </button>
-            <button >Face Auth</button>
+            <button>Face Auth</button>
           </div>
         </form>
         <div className="form-separator">
           <p>OR</p>
         </div>
         <div className="login-through">
-          <p>Login through <Link to="/login" onClick={() => {setOpenModal(true)}}>Log In</Link></p>
+          <p>
+            Login through{" "}
+            <Link
+              to="/login"
+              onClick={() => {
+                setOpenModal(true);
+              }}
+            >
+              Log In
+            </Link>
+          </p>
           {/*  */}
         </div>
         <div className="logos-row">
@@ -370,6 +352,5 @@ function SignUp() {
       {openModal && <Login />}
     </div>
   );
-
 }
 export default SignUp;
