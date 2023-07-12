@@ -7,7 +7,13 @@ import img4 from "../images/Linkdin.png";
 import img5 from "../images/logo.png";
 import "../styles/signup.css";
 import Axios from "axios";
+import Login from '../components/Login';
+
+
 function SignUp() {
+
+    const [openModal, setOpenModal] = useState(false);
+
     const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
@@ -248,60 +254,99 @@ function SignUp() {
         <div className="form-header">
           <h2>Create your account</h2>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>  
+        <div className="input">
           <input
             type="text"
             placeholder="Name"
             value={name}
             onChange={nameHandler}
           />
+        </div>  
           {errN ? (
-            <span style={{ color: "#00ffff" }}>Name Is Required</span>
+            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
+            "font-size": "12px",
+            "text-align": "center",
+            "margin-top": "0",
+            "display": "absolute",
+            "index-z": "-1" }}>Name Is Required</span>
           ) : (
             ""
-          )}
+          )}  
+        <div className="input">
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={EmailHandler}
           />
-          {errE ? <span style={{ color: "#00ffff" }}>{err}</span> : ""}
+        </div>  
+          {errE ? <span className="error-message" style={{ color: "rgb(247, 14, 14)",
+                "font-size": "12px",
+                "text-align": "center",
+                "margin-top": "0",
+                "display": "absolute",
+                "index-z": "-1" }}>{err}</span> : ""}
+        
+        <div className="input">  
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={passHandler}
           />
+        </div>  
           {errP ? (
-            <span style={{ color: "#00ffff" }}>
+            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
+                "font-size": "12px",
+                "text-align": "center",
+                "margin-top": "0",
+                "display": "absolute",
+                "index-z": "-1" }}>
               Password must be greater then 8
             </span>
           ) : (
             ""
           )}
+        
+        <div className="input">
           <input
             type="password"
             placeholder="Confirm Password"
             value={Cpassword}
             onChange={CpassHandler}
           />
+        </div>  
           {errCP ? (
-            <span style={{ color: "#00ffff" }}>Password Desn't Match</span>
+            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
+            "font-size": "12px",
+            "text-align": "center",
+            "margin-top": "0",
+            "display": "absolute",
+            "index-z": "-1" }}>Password Desn't Match</span>
           ) : (
             ""
           )}
+        
+        <div className="input">    
           <input
             type="tel"
             placeholder="Phone No."
             onChange={contactHandler}
             value={contact}
           />
+        </div>  
           {errCN ? (
-            <span style={{ color: "#00ffff" }}>Invalid Contact Number</span>
+            <span className="error-message" style={{ color: "rgb(247, 14, 14)",
+            "font-size": "12px",
+            "text-align": "center",
+            "margin-top": "0",
+            "display": "absolute",
+            "index-z": "-1" }}>Invalid Contact Number</span>
           ) : (
             ""
           )}
+         
           <div className="buttons-row">
             <button type="submit" onClick={register}>
               Sign Up
@@ -313,7 +358,8 @@ function SignUp() {
           <p>OR</p>
         </div>
         <div className="login-through">
-          <p>Login through <Link to="/login">Log In</Link></p>
+          <p>Login through <Link to="/login" onClick={() => {setOpenModal(true)}}>Log In</Link></p>
+          {/*  */}
         </div>
         <div className="logos-row">
           <img src={img4} alt="Logo 1" />
@@ -321,6 +367,7 @@ function SignUp() {
           <img src={img1} alt="Logo 3" />
         </div>
       </div>
+      {openModal && <Login />}
     </div>
   );
 

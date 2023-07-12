@@ -2,45 +2,46 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-  }
-  
-  .container {
+}
+
+.container {
     position: relative;
     display: flex;
     height: 100vh;
     text-align: center;
     color: #3f5a82;
-  }
-  
-  .illu {
+}
+
+.illu {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1;
-  }
-  .illu img{
+}
+
+.illu img {
     width: 570px;
     height: 500px;
     margin-top: 121px;
     margin-right: 500px;
-  }
-  
-  .left-section {
+}
+
+.left-section {
     width: 50%;
-    background-color:#a8cbfe;
-  }
-  
-  .logo img {
-    height: 80px; 
-    width: auto; 
+    background-color: #a8cbfe;
+}
+
+.logo img {
+    height: 80px;
+    width: auto;
     float: left;
     margin: 45px;
-  }
-  
-  
-  
-  .form-container {
+}
+
+
+
+.form-container {
     position: relative;
     z-index: 1;
     width: 50%;
@@ -50,61 +51,78 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 30px;
-  }
-  
-  .form-header {
+    margin-top: 10px;
+}
+
+.form-header {
     text-align: center;
-    margin-bottom: 5px;
-  }
-  
-  .form-container h2 {
+    margin-bottom: 0px;
+}
+
+.form-container h2 {
     margin-top: 0;
     font-size: 35px;
-  }
-  
-  .form-container input {
+}
+
+.form-container input {
+    display: absolute;
     width: 50%;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     padding: 10px;
     border: 1px solid #474646;
-  }
-  
-  .form-container .buttons-row {
+}
+
+.form-container .buttons-row {
     display: flex;
     justify-content: center;
     margin-bottom: 5px;
-  }
-  
-  .form-container .buttons-row button {
+}
+
+.form-container .buttons-row button {
     padding: 10px 15px;
     border-radius: 8px;
-    margin: 0px 8px;
+    margin: 0px 5px;
     width: 25%;
     color: white;
-    background-color: rgba(105,157,238,255);
+    background-color: rgba(105, 157, 238, 255);
     border: none;
     cursor: pointer;
-  }
-  button:hover{
+}
+
+.buttons-row button:hover {
     background-color: rgb(5, 5, 85);
     color: grey;
-  }
-  
-  
-  .form-separator, .login-through {
+}
+
+
+.form-separator,
+.login-through {
     display: flex;
     text-align: center;
-  }
-  
-  .logos-row {
+}
+
+.logos-row {
     display: flex;
     justify-content: center;
     margin-top: 0px;
-  }
-  
-  .logos-row img {
-    width: 7.33%;
+}
+
+.logos-row img {
+    width: 5.33%;
     padding: 10px;
-  }
-  
+}
+
+.input{
+    width: 800px;
+    margin: 15px;
+}
+
+/* .error-message {
+    color: rgb(247, 14, 14);
+    font-size: 12px;
+    text-align: center;
+    margin-top: 5px;
+    display: block;
+
+} */
+

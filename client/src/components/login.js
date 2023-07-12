@@ -133,7 +133,7 @@ body {
   }
   
   .input1 input {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     padding: 12px;
     border-radius: 4px;
     border: 1px solid #ccc;
@@ -161,7 +161,7 @@ body {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin: 10px;
+    margin: 5px;
   }
   
   button:hover {
@@ -181,13 +181,15 @@ body {
   }
   
   .socials1 img {
-    width: 50px;
-    height: 50px;
-    margin: 0 10px;
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
   }
   
                     `}
       </style>
+
+
       <div className="container-fluid">
         <div className="top1">
           <div className="logo1">
@@ -205,7 +207,7 @@ body {
             onChange={EmailHandler}
             value={email}
           />
-          {emailerr ? <span style={{ color: "#00ffff" }}>{error}</span> : ""}
+          {emailerr ? <span style={{ color: "rgb(247, 14, 14)" }}>{error}</span> : ""}
           <input
             type="password"
             placeholder="Password"
@@ -215,7 +217,7 @@ body {
             autocomplete="on"
           />
           {passerr ? (
-            <span style={{ color: "#00ffff" }}>
+            <span style={{ color: "rgb(247, 14, 14)" }}>
               Password must be greater then 8
             </span>
           ) : (
