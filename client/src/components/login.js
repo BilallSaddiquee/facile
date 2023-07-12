@@ -9,36 +9,52 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
 
-  const [emailerr, setEmailerr] = useState(false);
-  const [passerr, setPasserr] = useState(false);
-  const [error, seterr] = useState(false);
+  
+  const [err, seterr] = useState(false);
+ const[errors,setErrors]=useState("");
   const [checkemail, setcheckE] = useState(false)
   const [checkpass, setcheckP] = useState(false)
 
 
   function login() {
-    if (email !== "" && password !== "") {
+    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+    if (email === "") {
+      setErrors("Email is Required");
+      seterr(true);
+      //seterr("Email is Required");
+    } else if (!regex.test(email)) {
+      seterr(true)
+      setErrors("Invalid Email");
+    }
+    else if (password.length < 8) {
+      setErrors("Password must be greater then 8");
+      seterr(true);
+    }
+     else{
 
       axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
       }).then((res) => {
-
         if (res.data === "Incorrect Email") {
-          setcheckE(true);
+         // setcheckE(true);
           //errors.email = "Invalid Email and Password";
-          setcheckP(false)
+          //setcheckP(false)
+          setErrors("Invalid Email")
+          seterr(true)
           //setlogin_S(0)
         }
         else if (res.data === "Incorrect Password") {
-          setcheckE(false)
-          setcheckP(true);
+          seterr(true)
+          //setcheckE(false)
+          setErrors("Incorrect Password")
+         // setcheckP(true);
         }
         else if (res.data === "Login") {
-          setcheckP(false);
-          setcheckE(false);
-          setEmailerr(false);
-          setPasserr(false);
+          seterr(false)
+          setErrors("");
+          //setcheckP(false);
+          //setcheckE(false);
           localStorage.setItem('email_token', email)
       //    setEMAIL(email);
         
@@ -46,10 +62,7 @@ function Login() {
 
       })
     }
-    else {
-      setEmailerr(true)
-      setPasserr(true)
-    }
+  
   };
 
 
@@ -61,22 +74,23 @@ function Login() {
 
     setEmail(e.target.value);
     if (e.target.value === "") {
-      setEmailerr(true);
-      seterr("Email is Required");
+      seterr(true);
+      setErrors("Email is Required");
     } else if (!regex.test(e.target.value)) {
-      setEmailerr(true);
-      seterr("Invalid Email");
+      seterr(true);
+      setErrors("Invalid Email");
     } else {
-      setEmailerr(false);
+      seterr(false);
     }
   };
 
   const passHandler = (e) => {
     setPass(e.target.value);
     if (e.target.value.length < 8) {
-      setPasserr(true);
+      setErrors("Password must be greater then 8");
+      seterr(true);
     } else {
-      setPasserr(false);
+      seterr(false);
     }
   };
 
@@ -207,7 +221,7 @@ body {
             onChange={EmailHandler}
             value={email}
           />
-          {emailerr ? <span style={{ color: "rgb(247, 14, 14)" }}>{error}</span> : ""}
+  
           <input
             type="password"
             placeholder="Password"
@@ -216,9 +230,9 @@ body {
             value={password}
             autocomplete="on"
           />
-          {passerr ? (
+          {err ? (
             <span style={{ color: "rgb(247, 14, 14)" }}>
-              Password must be greater then 8
+              {errors}
             </span>
           ) : (
             ""
