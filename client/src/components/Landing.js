@@ -490,7 +490,7 @@ h4 {
             <ul className="nav__links">
               <li className="nav__item">
                 <a className="nav__link" href="#section--1">
-                  Home
+                  Homedfgh
                 </a>
               </li>
               <li className="nav__item">
@@ -547,7 +547,7 @@ h4 {
             <img
               src={img4}
               className="header__img"
-              alt="Minimalist bank items"
+              alt=""
             />
           </div>
         </header>
