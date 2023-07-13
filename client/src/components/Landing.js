@@ -7,6 +7,9 @@ import img4 from "../images/illustration_Landing.png";
 
 
 function Landing() {
+  
+
+  
     return (
         <>
 <style>
@@ -144,7 +147,7 @@ img {
   background-color: white;
 }
 
-/* nav and stickly class at the same time */
+/* nav and stickly className at the same time */
 .nav.sticky {
   position: fixed;
   background-color: rgba(255, 255, 255, 0.95);
@@ -212,6 +215,39 @@ img {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: inherit;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+
+.form-popup {
+  display: none;
+  position: inherit;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
 }
 
 h1 {
@@ -450,12 +486,53 @@ h4 {
                     <div className="header__title">
                         <section className="header-content">
                             <h1>
-                                {/* <!-- Green highlight effect --> */}
+                               
                                 <span>FACILE</span>
                             </h1>
                             <h4>Connect to the world, find anything you need. <br />
                                 Make your work facile, your productivity platform.</h4>
-                            <button type="button" className="btn btn-primary">Create Workspaces</button>
+                            <button type="button" className="btn btn-primary" onclick="openForm()">Create Workspaces</button>
+        
+                              <div className="form-popup" id="myForm">
+                                <form className="wform" id="regForm" action="">
+                              
+                                  <div className="tab"><h2 style={{ fontSize: '15px' }}>What's the name of your company or team?</h2>
+                                    <p style={{ fontSize: '15px' }}>This will be name of your slack workplace___choose something that your team will recogize.</p>
+                                    <p><input placeholder="Ex. Programmer Force"/></p>
+                                  </div>
+                              
+                                  <div className="tab"><h2 style={{ fontSize: '15px' }}>What’s your name?</h2>
+                                    <p style={{ fontSize: '15px' }}>Adding your name and profile photo helps your teammates recognize and connect with you more easily.</p>
+                                    <p><input placeholder="Ex. xyz"/></p>
+                                  </div>
+                              
+                                  <div className="tab"><h2 style={{ fontSize: '15px' }}>Who else is on the [name] team?</h2>
+                                    <p style={{ fontSize: '15px' }}>Add coworker by email</p>
+                                    <p><input placeholder="xyz@email.com"/></p>
+                                  </div>
+                              
+                                  <div className="tab"><h2 style={{ fontSize: '15px' }}>What’s your team working on right now?</h2>
+                                    <p style={{ fontSize: '15px' }}>This could be anything: a project, campaign, event, or the deal you’re trying to close.</p>
+                                    <p><input placeholder="Project name"/></p>
+                                  </div>
+                              
+                                  <div style={{ overflow: 'auto' }}>
+                                    <div style={{ float: 'right' }}>
+                                      <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                                      <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                                    </div>
+                                  </div>
+                              
+                                 
+                                  <div style={{ textAlign: 'center', marginTop: '40px' }}>
+                                    <span className="step">1</span>
+                                    <span className="step">2</span>
+                                    <span className="step">3</span>
+                                    <span className="step">4</span>
+                                  </div>
+                              
+                                </form>
+                              </div>
                         </section>
 
                         <img src={img4} className="header__img" alt="Minimalist bank items" />
