@@ -1,16 +1,39 @@
-import react from 'react';
- import img1 from "../images/logofecile.png";
- import img2 from "../images/second.png";
- import img3 from "../images/teamwork.jpg";
+import react, { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import img1 from "../images/logofecile.png";
+import img2 from "../images/second.png";
+import img3 from "../images/teamwork.jpg";
 import img4 from "../images/illustration_Landing.png";
- import img5 from "../images/connect.jpg";
-
+import img5 from "../images/connect.jpg";
+import Create_workspace from "./Create_workspace";
 
 function Landing() {
-    return (
-        <>
-<style>
-{`
+
+  
+ const navigate = useNavigate();
+  const [showWorkSpacePopup, setWorkSpacePopup] = useState(false);
+  const [check, setCheck] = useState("");
+
+  useEffect(() => {
+    setCheck(localStorage.getItem('email_token'))
+  }, [])
+
+  const handleSignUpClick = () => {
+    if (check==="") {     
+      navigate("/login");
+    }
+    else
+    {
+      console.log(localStorage.getItem("email_token"))
+      setWorkSpacePopup(true);
+    }
+  };
+
+
+  return (
+    <>
+      <style>
+        {`
     :root {
   --color-primary: #105bd2;
   --color-secondary: #ffcb03;
@@ -130,6 +153,26 @@ img {
   transition: filter 0.5s;
 }
 
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+  }
+  
+  .popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
 
 /* NAVIGATION */
 .nav {
@@ -144,7 +187,7 @@ img {
   background-color: white;
 }
 
-/* nav and stickly class at the same time */
+/* nav and stickly className at the same time */
 .nav.sticky {
   position: fixed;
   background-color: rgba(255, 255, 255, 0.95);
@@ -212,6 +255,39 @@ img {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: inherit;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+
+.form-popup {
+  display: none;
+  position: inherit;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
 }
 
 h1 {
@@ -420,158 +496,214 @@ h4 {
   font-weight: 400;0
   padding: 1rem;
   z-index: 999;
-}`
-    }
-</style>
-            <body>
-                <header className="header" >
-                    <nav className="nav">
-                        <img src={img1} alt="Facile" className="nav__logo" id="logo" />
-                        <ul className="nav__links">
-                            <li className="nav__item">
-                                <a className="nav__link" href="#section--1">Home</a>
-                            </li>
-                            <li className="nav__item">
-                                <a className="nav__link" href="#section--2">About</a>
-                            </li>
-                            <li className="nav__item">
-                                <a className="nav__link" href="#section--3">Workspaces</a>
-                            </li>
-                            <li className="nav__item">
-                                <a className="btn" href="/">Login</a>
-                            </li>
-                            <li className="nav__item">
-                                <a className="btn" href="/">Signup</a>
-                            </li>
-                        </ul>
-                    </nav>
+}`}
+      </style>
 
+      <body>
+        <header className="header">
+          <nav className="nav">
+            <img src={img1} alt="Facile" className="nav__logo" id="logo" />
+            <ul className="nav__links">
+              <li className="nav__item">
+                <a className="nav__link" href="#section--1">
+                  Home
+                </a>
+              </li>
+              <li className="nav__item">
+                <a className="nav__link" href="#section--2">
+                  About
+                </a>
+              </li>
+              <li className="nav__item">
+                <a className="nav__link" href="#section--3">
+                  Workspaces
+                </a>
+              </li>
+              <li className="nav__item">
+                <a className="btn" href="/sign">
+                  Signup
+                </a>
+              </li>
+              {check===""?
+              <li className="nav__item">
+                <a className="btn" href="/login">
+                  Login
+                </a>
+              </li>
+              :
+              <li className="nav__item">
+                <a className="btn" onClick={localStorage.setItem('email_token', '')}>
+                  Logout
+                </a>
+              </li>
+              }
+              
+            </ul>
+          </nav>
 
-                    <div className="header__title">
-                        <section className="header-content">
-                            <h1>
-                                {/* <!-- Green highlight effect --> */}
-                                <span>FACILE</span>
-                            </h1>
-                            <h4>Connect to the world, find anything you need. <br />
-                                Make your work facile, your productivity platform.</h4>
-                            <button type="button" className="btn btn-primary">Create Workspaces</button>
-                        </section>
+          <div className="header__title">
+            <section className="header-content">
+              <h1>
+                <span>FACILE</span>
+              </h1>
+              <h4>
+                Connect to the world, find anything you need. <br />
+                Make your work facile, your productivity platform.
+              </h4>
+              {/* <button type="button" className="btn btn-primary" onclick="openForm()">Create Workspaces</button> */}
 
-                        <img src={img4} className="header__img" alt="Minimalist bank items" />
-                    </div>
-                </header>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleSignUpClick}
+                style={{ marginBottom: "20px" }}
+              >
+                Create Workspaces
+              </button>
+              {showWorkSpacePopup && (
+        <div className="popup-container">
+          <div className="popup">
+            <Create_workspace onClose={() => setWorkSpacePopup(false)} />
+          </div>
+        </div>
+      )}
+            </section>
 
-                <section className="section section-1 " id="section--1">
-                    <div className="section__title">
-                        <h2 className="section__description">Features</h2>
-                        <h3 className="section__header">
-                            All you need to connect with the Loop
-                        </h3>
-                    </div>
+            <img
+              src={img4}
+              className="header__img"
+              alt=""
+            />
+          </div>
+        </header>
 
-                    <div className="features">
-                        <section className="feature-one">
-                            <img src={img5} data-src="img/connect.jpg" alt="Computer" className="features__img lazy-img" />
-                            <div className="features__feature">
-                                {/* <div className="features__icon">
+        <section className="section section-1 " id="section--1">
+          <div className="section__title">
+            <h2 className="section__description">Features</h2>
+            <h3 className="section__header">
+              All you need to connect with the Loop
+            </h3>
+          </div>
+
+          <div className="features">
+            <section className="feature-one">
+              <img
+                src={img5}
+                data-src="img/connect.jpg"
+                alt="Computer"
+                className="features__img lazy-img"
+              />
+              <div className="features__feature">
+                {/* <div className="features__icon">
                                     <svg>
                                         <use href="img/icons.svg#icon-monitor"></use>
                                     </svg>
                                 </div> */}
-                                <h5 className="features__header">Connect to the world</h5>
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde alias
-                                    sint quos? Accusantium a fugiat porro reiciendis saepe quibusdam
-                                    debitis ducimus.
-                                </p>
-                            </div>
-                        </section>
-                        <section className="feature-two">
-                            <div className="features__feature">
-                                <div className="features__icon">
-{/*                                 
+                <h5 className="features__header">Connect to the world</h5>
+                <p>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde
+                  alias sint quos? Accusantium a fugiat porro reiciendis saepe
+                  quibusdam debitis ducimus.
+                </p>
+              </div>
+            </section>
+            <section className="feature-two">
+              <div className="features__feature">
+                <div className="features__icon">
+                  {/*                                 
                                     <svg>
                                         <use xlink: href="img/icons.svg#icon-globe"></use>
                                     </svg> */}
-                                </div>
-                                <h5 className="features__header">Everything you need in one place</h5>
-                                <p>
-                                    Nesciunt quos autem dolorum voluptates cum dolores dicta fuga
-                                    inventore ab? Nulla incidunt eius numquam sequi iste pariatur
-                                    quibusdam!
-                                </p>
-                            </div>
-                            <img src={img2} data-src="img/second.png" alt="Plant" className="features__img lazy-img" />
-                        </section>
-                        <section className="feature-three">
-                            <img src={img3} data-src="img/teamwork.jpg" alt="Credit card" className="features__img lazy-img" />
-                            <div className="features__feature">
-                                {/* <div className="features__icon">
+                </div>
+                <h5 className="features__header">
+                  Everything you need in one place
+                </h5>
+                <p>
+                  Nesciunt quos autem dolorum voluptates cum dolores dicta fuga
+                  inventore ab? Nulla incidunt eius numquam sequi iste pariatur
+                  quibusdam!
+                </p>
+              </div>
+              <img
+                src={img2}
+                data-src="img/second.png"
+                alt="Plant"
+                className="features__img lazy-img"
+              />
+            </section>
+            <section className="feature-three">
+              <img
+                src={img3}
+                data-src="img/teamwork.jpg"
+                alt="Credit card"
+                className="features__img lazy-img"
+              />
+              <div className="features__feature">
+                {/* <div className="features__icon">
                                     <svg>
                                         <use xlink: href="img/icons.svg#icon-trending-up"></use>
                                     </svg>
                                 </div> */}
-                                <h5 className="features__header">Achieve your goals in Teamwork</h5>
-                                <p>
-                                    Quasi, fugit in cumque cupiditate reprehenderit debitis animi enim
-                                    eveniet consequatur odit quam quos possimus assumenda dicta fuga
-                                    inventore ab.
-                                </p>
-                            </div>
-                        </section>
-                    </div>
-                </section>
+                <h5 className="features__header">
+                  Achieve your goals in Teamwork
+                </h5>
+                <p>
+                  Quasi, fugit in cumque cupiditate reprehenderit debitis animi
+                  enim eveniet consequatur odit quam quos possimus assumenda
+                  dicta fuga inventore ab.
+                </p>
+              </div>
+            </section>
+          </div>
+        </section>
 
-                <section className="section " id="section--2">
-                    <div className="section__title">
-                        <h2 className="section__description">Overview</h2>
-                        <h3 className="section__header">
-                            Everything as simple as possible, but no simpler.
-                        </h3>
-                    </div>
-                </section>
-                <div>
-                    <img src="img\overview.jpg" className="overview__img" alt="" />
-                </div>
+        <section className="section " id="section--2">
+          <div className="section__title">
+            <h2 className="section__description">Overview</h2>
+            <h3 className="section__header">
+              Everything as simple as possible, but no simpler.
+            </h3>
+          </div>
+        </section>
+        <div>
+          <img src="img\overview.jpg" className="overview__img" alt="" />
+        </div>
 
-                {/* <!-- footer --> */}
-                <footer className="footer">
-                    <img src={img1} alt="Logo" className="footer__logo" />
-                    <p className="footer__copyright">
-                        &copy; Copyright. Use for learning or your portfolio. Don't use to teach. Don't claim
-                        as your own product.
-                    </p>
-                </footer>
+        {/* <!-- footer --> */}
+        <footer className="footer">
+          <img src={img1} alt="Logo" className="footer__logo" />
+          <p className="footer__copyright">
+            &copy; Copyright. Use for learning or your portfolio. Don't use to
+            teach. Don't claim as your own product.
+          </p>
+        </footer>
 
-                <div className="modal hidden">
-                    <button className="btn--close-modal">&times;</button>
-                    <h2 className="modal__header">
-                        Create Your Account
-                    </h2>
-                    <form>
-                        <section className="modal__form">
-                            <label>First Name</label>
-                            <input type="text" />
-                            <label>Last Name</label>
-                            <input type="text" />
-                            <label>Email Address</label>
-                            <input type="email" />
-                        </section>
-                        <section className="form-buttons">
-                            <a className="next--step" href="login.html">Next &rarr;</a>
-                            <a className="next--step" href="login.html">Log in </a>
-                        </section>
-
-                    </form>
-                </div>
-                <div className="overlay hidden"></div>
-            </body>
-
-               
-        </>  
-                
-    );
+        <div className="modal hidden">
+          <button className="btn--close-modal">&times;</button>
+          <h2 className="modal__header">Create Your Account</h2>
+          <form>
+            <section className="modal__form">
+              <label>First Name</label>
+              <input type="text" />
+              <label>Last Name</label>
+              <input type="text" />
+              <label>Email Address</label>
+              <input type="email" />
+            </section>
+            <section className="form-buttons">
+              <a className="next--step" href="login.html">
+                Next &rarr;
+              </a>
+              <a className="next--step" href="login.html">
+                Log in{" "}
+              </a>
+            </section>
+          </form>
+        </div>
+        <div className="overlay hidden"></div>
+      </body>
+    </>
+  );
 }
 
 export default Landing;
