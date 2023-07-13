@@ -4,17 +4,15 @@ import img2 from "../images/second.png";
 import img3 from "../images/teamwork.jpg";
 import img4 from "../images/illustration_Landing.png";
 import img5 from "../images/connect.jpg";
+import Create_workspace from "./Create_workspace";
 
 function Landing() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  function openForm() {
-    setIsFormOpen(true);
-  }
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
-  function closeForm() {
-    setIsFormOpen(false);
-  }
+  const handleSignUpClick = () => {
+    setShowLoginPopup(true);
+  };
 
   return (
     <>
@@ -138,6 +136,26 @@ body {
 img {
   transition: filter 0.5s;
 }
+
+.popup-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+  }
+  
+  .popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
 
 
 /* NAVIGATION */
@@ -464,6 +482,7 @@ h4 {
   z-index: 999;
 }`}
       </style>
+
       <body>
         <header className="header">
           <nav className="nav">
@@ -507,69 +526,22 @@ h4 {
                 Make your work facile, your productivity platform.
               </h4>
               {/* <button type="button" className="btn btn-primary" onclick="openForm()">Create Workspaces</button> */}
-             
 
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={openForm}
-                style={{ marginBottom: '20px' }}
+                onClick={handleSignUpClick}
+                style={{ marginBottom: "20px" }}
               >
                 Create Workspaces
               </button>
-
-              {isFormOpen && (
-                <>
-                  <div
-                    className="backdrop"
-                    style={{
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                      zIndex: '9998',
-                    }}
-                  ></div>
-
-                  <div
-                    className="form-popup"
-                    style={{
-                      display: 'block',
-                      position: 'fixed',
-                      top: '50%',
-                      left: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      backgroundColor: '#fff',
-                      padding: '20px',
-                      zIndex: '9999',
-                      width: '400px',
-                      borderRadius: '8px',
-                      boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.15)',
-                    }}
-                  >
-                    <h2 style={{ marginBottom: '20px' }}>Popup Form</h2>
-                    <form>
-                      <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="companyName">Company Name</label>
-                        <input type="text" id="companyName" placeholder="Enter company name" />
-                      </div>
-                      <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="yourName">Your Name</label>
-                        <input type="text" id="yourName" placeholder="Enter your name" />
-                      </div>
-                      <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter email" />
-                      </div>
-                      <button type="button" onClick={closeForm} style={{ marginRight: '10px' }}>Close</button>
-                      <button type="submit">Submit</button>
-                    </form>
-                  </div>
-                </>
-              )}
-
+              {showLoginPopup && (
+        <div className="popup-container">
+          <div className="popup">
+            <Create_workspace onClose={() => setShowLoginPopup(false)} />
+          </div>
+        </div>
+      )}
             </section>
 
             <img

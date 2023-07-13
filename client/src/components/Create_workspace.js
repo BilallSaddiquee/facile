@@ -5,7 +5,7 @@ import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
 import img2 from "../images/signinlogo.png";
 import axios from "axios";
-function Login() {
+function Create_workspace(){
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
 
@@ -15,50 +15,36 @@ function Login() {
   const [checkemail, setcheckE] = useState(false)
   const [checkpass, setcheckP] = useState(false)
 
+  const [name, setName] = useState("");
+  const [workSpacename, setWorkSpaceName] = useState("");
+  const [Description, setDescription] = useState("");
 
   function login() {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (email === "") {
+    if (name === "") {
       setErrors("Email is Required");
       seterr(true);
       //seterr("Email is Required");
-    } else if (!regex.test(email)) {
-      seterr(true)
-      setErrors("Invalid Email");
-    }
-    else if (password.length < 8) {
-      setErrors("Password must be greater then 8");
-      seterr(true);
-    }
+    } else if (workSpacename === "") {
+        setErrors("WorkSpace Name is Required");
+        seterr(true);
+        //seterr("Email is Required");
+      } 
+    else if (Description === "") {
+        setErrors("Description is Required");
+        seterr(true);
+        //seterr("Email is Required");
+      } 
      else{
 
       axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
       }).then((res) => {
-        if (res.data === "Incorrect Email") {
-         // setcheckE(true);
-          //errors.email = "Invalid Email and Password";
-          //setcheckP(false)
-          setErrors("Invalid Email")
-          seterr(true)
-          //setlogin_S(0)
-        }
-        else if (res.data === "Incorrect Password") {
-          seterr(true)
-          //setcheckE(false)
-          setErrors("Incorrect Password")
-         // setcheckP(true);
-        }
-        else if (res.data === "Login") {
-          seterr(false)
-          setErrors("");
-          //setcheckP(false);
-          //setcheckE(false);
-          localStorage.setItem('email_token', email)
-      //    setEMAIL(email);
         
-        }
+        console.log(res);
+        
+        
 
       })
     }
@@ -69,31 +55,34 @@ function Login() {
 
 
   //Set value and check errors of Email using regex
-  const EmailHandler = (e) => {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-
-    setEmail(e.target.value);
+  const nameHandler = (e) => {
+    setName(e.target.value);
     if (e.target.value === "") {
-      seterr(true);
-      setErrors("Email is Required");
-    } else if (!regex.test(e.target.value)) {
-      seterr(true);
-      setErrors("Invalid Email");
-    } else {
-      seterr(false);
-    }
-  };
-
-  const passHandler = (e) => {
-    setPass(e.target.value);
-    if (e.target.value.length < 8) {
-      setErrors("Password must be greater then 8");
+      setErrors("Name is Required");
       seterr(true);
     } else {
       seterr(false);
     }
   };
+  const worknameHandler = (e) => {
+    setWorkSpaceName(e.target.value);
+    if (e.target.value === "") {
+      setErrors("Work Space Name is Required");
+      seterr(true);
+    } else {
+      seterr(false);
+    }
+  };
 
+  const desHandler = (e) => {
+    setDescription(e.target.value);
+    if (e.target.value === "") {
+      setErrors("Discription is Required");
+      seterr(true);
+    } else {
+      seterr(false);
+    }
+  };
   return (
     <>
       <style>
@@ -115,7 +104,8 @@ body {
     background-color: #f1f1f1;
     padding: 20px;
     border-radius: 10px;
-    height: 500px;
+    width:800px;
+    height: 550px;
   }
   
   .top1 {
@@ -167,6 +157,14 @@ body {
     color: rgb(57, 9, 119);
     text-decoration: underline;
   }
+  .input1 textarea{
+    border-radius: 4px;
+ 
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    height:100px;
+    width: 300px;
+  }
   
   button {
     padding: 10px 20px;
@@ -188,17 +186,7 @@ body {
     margin-top: 0;
   }
   
-  .socials1 {
-    display: flex;
-    justify-content: center;
-    margin-top: 0px;
-  }
   
-  .socials1 img {
-    width: 40px;
-    height: 40px;
-    margin: 0 5px;
-  }
   
                     `}
       </style>
@@ -215,20 +203,26 @@ body {
         </div>
         <div className="input1">
           <input
-            type="email"
-            placeholder="Email"
+            type="name"
+            placeholder="Your Name"
             autoComplete="on"
-            onChange={EmailHandler}
-            value={email}
+            onChange={nameHandler}
+            value={name}
           />
-  
           <input
-            type="password"
-            placeholder="Password"
-            required
-            onChange={passHandler}
-            value={password}
-            autocomplete="on"
+            type="WorkSpaceName"
+            placeholder="Work Space  Name"
+            autoComplete="on"
+            onChange={worknameHandler}
+            value={workSpacename}
+          />
+       <textarea
+            className="textarea"
+            type="Description"
+            placeholder=" Description"
+            autoComplete="on"
+            onChange={desHandler}
+            value={Description}
           />
           {err ? (
             <span style={{ color: "rgb(247, 14, 14)" }}>
@@ -237,23 +231,14 @@ body {
           ) : (
             ""
           )}
-          <a href="">forgot password?</a>
-          <button onClick={login}>Login</button>
-          <p>
-            Don't have a account?<Link to="/sign">SignUp</Link>
-          </p>
+          <button onClick={login}>Create WorkSpace</button>
+         
         </div>
-        <div className="using1">
-          <p>Log in using</p>
-        </div>
-        <div className="socials1">
-          <img src={img4} alt="" />
-          <img src={img3} alt="" />
-          <img src={img1} alt="" />
-        </div>
+       
+        
       </div>
     </>
   );
 }
 
-export default Login;
+export default Create_workspace;

@@ -11,6 +11,11 @@ import Login from "./Login";
 
 function SignUp() {
   const [openModal, setOpenModal] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+  const handleSignUpClick = () => {
+    setShowLoginPopup(true);
+  };
 
   const navigate = useNavigate();
 
@@ -76,7 +81,8 @@ function SignUp() {
         //image:capturedImage
       }).then((response) => {
         console.log(response);
-        navigate('/login');
+      
+        setShowLoginPopup(true);
       });
     }
   };
@@ -330,17 +336,22 @@ function SignUp() {
           </div>
         </form>
         <p>
-            Already Have Account?{" "}
-            <Link
-              to="/login"
-              onClick={() => {
-                setOpenModal(true);
-              }}
-            >
-              Log In
-            </Link>
-          </p>
-        <div className="form-separator">
+        Already Have Account?{" "}
+
+        <Link to="#" onClick={handleSignUpClick}>
+          Log In
+        </Link>
+
+      </p>
+      
+      {showLoginPopup && (
+        <div className="popup-container">
+          <div className="popup">
+            <Login onClose={() => setShowLoginPopup(false)} />
+          </div>
+        </div>
+      )}
+         <div className="form-separator">
           <p>OR</p>
           
         </div>
