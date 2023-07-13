@@ -490,7 +490,7 @@ h4 {
             <ul className="nav__links">
               <li className="nav__item">
                 <a className="nav__link" href="#section--1">
-                  Homedfgh
+                  Home
                 </a>
               </li>
               <li className="nav__item">
