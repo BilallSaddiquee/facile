@@ -64,10 +64,11 @@ body {
 .section__title {
   max-width: 80rem;
   margin: 0 auto 8rem auto;
+  padding: 5rem;
 }
 
 .section__description {
-  font-size: 1.8rem;
+  font-size: 3rem;
   font-weight: 600;
   text-transform: uppercase;
   color: var(--color-primary);
@@ -75,7 +76,7 @@ body {
 }
 
 .section__header {
-  font-size: 4rem;
+  font-size: 3.5rem;
   line-height: 1.3;
   font-weight: 500;
 }
@@ -93,11 +94,12 @@ body {
   font-family: inherit;
   font-weight: 500;
   border: none;
-  padding: 1.25rem 4.5rem;
+  padding: 1rem 3rem;
   border-radius: 2rem;
   cursor: pointer;
   transition: all 0.3s;
   color: var(--white);
+  text-decoration: none;
 }
 
 .btn:hover {
@@ -436,10 +438,10 @@ h4 {
                                 <a className="nav__link" href="#section--3">Workspaces</a>
                             </li>
                             <li className="nav__item">
-                                <a className="nav_link nav_link--btn btn--show-modal" href="/">Login</a>
+                                <a className="btn" href="/">Login</a>
                             </li>
                             <li className="nav__item">
-                                <a className="nav_link nav_link--btn btn--show-modal" href="/">Signup</a>
+                                <a className="btn" href="/">Signup</a>
                             </li>
                         </ul>
                     </nav>
