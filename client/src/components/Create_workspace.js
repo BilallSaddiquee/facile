@@ -88,13 +88,15 @@ function Create_workspace(){
       <style>
         {`                    
 body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
+     position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      transition: all 0.5s;
   }
   
   .container-fluid {
@@ -104,7 +106,7 @@ body {
     background-color: #f1f1f1;
     padding: 20px;
     border-radius: 10px;
-    width:800px;
+    width: 500px;
     height: 550px;
   }
   
@@ -125,12 +127,15 @@ body {
     margin: 0 20px;
   }
   
-  .name1 {
+  .name1 h1 {
+    width: 20%
+    font-weight: 100;
+    font-size: xx-large;
     flex-grow: 1;
   }
   
   .input1 {
-    display: flex;
+   display: flex;
     flex-direction: column;
     align-items: center;
     margin-bottom: 7px;
@@ -141,7 +146,9 @@ body {
     padding: 12px;
     border-radius: 4px;
     border: 1px solid #ccc;
-    width: 300px;
+    width: 400px;
+    color: #2f7df6;
+    text-decoration: none;
   }
   
   .forgot-password1 {
@@ -149,6 +156,7 @@ body {
   }
   
   .input1 a {
+    lign-self: flex-end;
     color: #2f7df6;
     text-decoration: none;
   }
@@ -159,11 +167,13 @@ body {
   }
   .input1 textarea{
     border-radius: 4px;
- 
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    height:100px;
-    width: 300px;
+    height: 180px;
+    width: 400px;
+  }
+  .input1 button{
+    width: 400px;
   }
   
   button {
@@ -198,7 +208,7 @@ body {
             <img src={img2} alt="" />
           </div>
           <div className="name1">
-            <h1>Welcome To Fecile</h1>
+            <h1>Create Workspace</h1>
           </div>
         </div>
         <div className="input1">
