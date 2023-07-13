@@ -5,7 +5,7 @@ import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
 import img2 from "../images/signinlogo.png";
 import axios from "axios";
-function Create_workspace(){
+function Create_workspace({ onClose }){
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
 
@@ -242,6 +242,7 @@ body {
             ""
           )}
           <button onClick={login}>Create WorkSpace</button>
+          <button onClick={onClose}>Close</button>
          
         </div>
        

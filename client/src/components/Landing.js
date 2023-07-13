@@ -1,4 +1,5 @@
-import react, { useState } from "react";
+import react, { useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import img1 from "../images/logofecile.png";
 import img2 from "../images/second.png";
 import img3 from "../images/teamwork.jpg";
@@ -8,11 +9,26 @@ import Create_workspace from "./Create_workspace";
 
 function Landing() {
 
-  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  
+ const navigate = useNavigate();
+  const [showWorkSpacePopup, setWorkSpacePopup] = useState(false);
+  const [check, setCheck] = useState("");
+
+  useEffect(() => {
+    setCheck(localStorage.getItem('email_token'))
+  }, [])
 
   const handleSignUpClick = () => {
-    setShowLoginPopup(true);
+    if (check==="") {     
+      navigate("/login");
+    }
+    else
+    {
+      console.log(localStorage.getItem("email_token"))
+      setWorkSpacePopup(true);
+    }
   };
+
 
   return (
     <>
@@ -504,15 +520,24 @@ h4 {
                 </a>
               </li>
               <li className="nav__item">
-                <a className="btn" href="/">
-                  Login
-                </a>
-              </li>
-              <li className="nav__item">
-                <a className="btn" href="/">
+                <a className="btn" href="/sign">
                   Signup
                 </a>
               </li>
+              {check===""?
+              <li className="nav__item">
+                <a className="btn" href="/login">
+                  Login
+                </a>
+              </li>
+              :
+              <li className="nav__item">
+                <a className="btn" onClick={localStorage.setItem('email_token', '')}>
+                  Logout
+                </a>
+              </li>
+              }
+              
             </ul>
           </nav>
 
@@ -535,10 +560,10 @@ h4 {
               >
                 Create Workspaces
               </button>
-              {showLoginPopup && (
+              {showWorkSpacePopup && (
         <div className="popup-container">
           <div className="popup">
-            <Create_workspace onClose={() => setShowLoginPopup(false)} />
+            <Create_workspace onClose={() => setWorkSpacePopup(false)} />
           </div>
         </div>
       )}
