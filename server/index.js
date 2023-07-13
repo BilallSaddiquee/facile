@@ -125,6 +125,143 @@ console.log(email,password)
 
 
 
+// Endpoint to create a new workspace
+app.post('/workspaces', async (req, res) => {
+  try {
+    const { name, description, adminId } = req.body;
+
+    // Check if the workspace already exists
+    const checkQuery = 'SELECT id FROM workspace WHERE name = $1';
+    const checkValues = [name];
+
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rowCount > 0) {
+      // Workspace with the same name already exists
+      res.status(409).json({ message: 'Workspace with the same name already exists' });
+      return;
+    }
+
+    // Insert the workspace into the "workspace" table
+    const insertQuery = 'INSERT INTO workspace (name, description, admin_id) VALUES ($1, $2, $3) RETURNING id';
+    const insertValues = [name, description, adminId];
+
+    const result = await pool.query(insertQuery, insertValues);
+
+    const newWorkspaceId = result.rows[0].id;
+
+    res.status(201).json({ message: 'Workspace created successfully', workspaceId: newWorkspaceId, adminId });
+  } catch (error) {
+    console.error('Error creating workspace:', error);
+    res.status(500).json({ message: 'Error creating workspace' });
+  }
+});
+
+
+
+// Endpoint to create a new channel
+app.post('/channels', async (req, res) => {
+  try {
+    const { name, description, wsId } = req.body;
+
+    // Check if the channel already exists
+    const checkQuery = 'SELECT id FROM channel WHERE name = $1';
+    const checkValues = [name];
+
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rowCount > 0) {
+      // Channel with the same name already exists
+      res.status(409).json({ message: 'Channel with the same name already exists' });
+      return;
+    }
+
+    // Insert the channel into the "channel" table
+    const insertQuery = 'INSERT INTO channel (name, description, ws_id) VALUES ($1, $2, $3) RETURNING id';
+    const insertValues = [name, description, wsId];
+
+    const result = await pool.query(insertQuery, insertValues);
+
+    const newChannelId = result.rows[0].id;
+
+    res.status(201).json({ message: 'Channel created successfully', channelId: newChannelId });
+  } catch (error) {
+    console.error('Error creating channel:', error);
+    res.status(500).json({ message: 'Error creating channel' });
+  }
+});
+
+
+// Endpoint to add a new co-worker
+app.post('/co-workers', async (req, res) => {
+  try {
+    const { email, name, password, workspaceIds } = req.body;
+
+    // Check if the co-worker already exists
+    const checkQuery = 'SELECT id FROM co_workers WHERE email = $1';
+    const checkValues = [email];
+
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rowCount > 0) {
+      // Co-worker with the same email already exists
+      res.status(409).json({ message: 'Co-worker with the same email already exists' });
+      return;
+    }
+
+    // Insert the co-worker into the "co_workers" table
+    const insertQuery = 'INSERT INTO co_workers (email, name, password) VALUES ($1, $2, $3) RETURNING id';
+    const insertValues = [email, name, password];
+
+    const result = await pool.query(insertQuery, insertValues);
+
+    const newCoWorkerId = result.rows[0].id;
+
+    // Associate the co-worker with the specified workspaces
+    const workspaceInsertQuery = 'INSERT INTO co_worker_workspace (co_worker_id, workspace_id) VALUES ($1, $2)';
+    const workspaceInsertValues = workspaceIds.map(workspaceId => [newCoWorkerId, workspaceId]);
+
+    await Promise.all(workspaceInsertValues.map(values => pool.query(workspaceInsertQuery, values)));
+
+    res.status(201).json({ message: 'Co-worker added successfully', coWorkerId: newCoWorkerId });
+  } catch (error) {
+    console.error('Error adding co-worker:', error);
+    res.status(500).json({ message: 'Error adding co-worker' });
+  }
+});
+
+
+
+// Endpoint to delete a channel
+app.delete('/channels/:id', async (req, res) => {
+  try {
+    const channelId = req.params.id;
+
+    // Check if the channel exists
+    const checkQuery = 'SELECT id FROM channel WHERE id = $1';
+    const checkValues = [channelId];
+
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rowCount === 0) {
+      // Channel not found
+      res.status(404).json({ message: 'Channel not found' });
+      return;
+    }
+
+    // Delete the channel from the "channel" table
+    const deleteQuery = 'DELETE FROM channel WHERE id = $1';
+    const deleteValues = [channelId];
+
+    await pool.query(deleteQuery, deleteValues);
+
+    res.status(200).json({ message: 'Channel deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting channel:', error);
+    res.status(500).json({ message: 'Error deleting channel' });
+  }
+});
+
 // Update an existing user
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
