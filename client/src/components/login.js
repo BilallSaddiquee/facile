@@ -240,7 +240,7 @@ body {
           <a href="">forgot password?</a>
           <button onClick={login}>Sign In</button>
           <p>
-            Don't have a account <Link to="/">SIGN In</Link>
+            Don't have a account?<Link to="/">SignUp</Link>
           </p>
         </div>
         <div className="using1">

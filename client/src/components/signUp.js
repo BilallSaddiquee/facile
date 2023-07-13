@@ -243,6 +243,9 @@ function SignUp() {
   // </div>
 
   return (
+
+    
+    
     <div className="container">
       <div className="illu">
         <img src={img2} alt="" />
@@ -326,12 +329,8 @@ function SignUp() {
             <button>Face Auth</button>
           </div>
         </form>
-        <div className="form-separator">
-          <p>OR</p>
-        </div>
-        <div className="login-through">
-          <p>
-            Login through{" "}
+        <p>
+            Already Have Account?{" "}
             <Link
               to="/login"
               onClick={() => {
@@ -340,6 +339,14 @@ function SignUp() {
             >
               Log In
             </Link>
+          </p>
+        <div className="form-separator">
+          <p>OR</p>
+          
+        </div>
+        <div className="login-through">
+          <p>
+            Login through
           </p>
           {/*  */}
         </div>
