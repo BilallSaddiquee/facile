@@ -513,7 +513,7 @@ h4 {
                 type="button"
                 className="btn btn-primary"
                 onClick={openForm}
-                style={{ marginBottom: '20px' }}
+                style={{ marginBottom: '20px'}}
               >
                 Create Workspaces
               </button>
@@ -530,6 +530,7 @@ h4 {
                       height: '100%',
                       backgroundColor: 'rgba(0, 0, 0, 0.5)',
                       zIndex: '9998',
+                      
                     }}
                   ></div>
 
@@ -541,30 +542,92 @@ h4 {
                       top: '50%',
                       left: '50%',
                       transform: 'translate(-50%, -50%)',
-                      backgroundColor: '#fff',
-                      padding: '20px',
+                      backgroundColor: '#F99746',
+                      padding: '25px',
                       zIndex: '9999',
                       width: '400px',
                       borderRadius: '8px',
                       boxShadow: '0px 2px 10px rgba(0, 0, 0, 0.15)',
+                      minHeight: '20%',
+                      margin: '0',
+                      fontSize: '14px',
+                      flexDrection: 'column',
+                      alignItems: 'center',
+                      background: 'white',
+                      
                     }}
                   >
-                    <h2 style={{ marginBottom: '20px' }}>Popup Form</h2>
+                    <h2 style={{ marginBottom: '10px',
+                    fontWeight: '510',
+                    color: '#1c87c9',}}>Create Workspaces</h2>
                     <form>
-                      <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="companyName">Company Name</label>
-                        <input type="text" id="companyName" placeholder="Enter company name" />
+                      <div style={{ width: '18%',
+                        padding: '8px',
+                        marginBottom: '8px',
+                        border: '#F99746',
+                        outline: 'none', }}>
+                        <label htmlFor="companyName"></label>
+                        <input style={{ width: '700%',
+                        padding: '8px',
+                        marginBottom: '5px',
+                        border: '3px solid #2980B9 ',
+                         }} type="text" id="companyName" placeholder="Enter your company name" />
                       </div>
-                      <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="yourName">Your Name</label>
-                        <input type="text" id="yourName" placeholder="Enter your name" />
+                      <div style={{ width: '18%',
+                        padding: '8px',
+                        marginBottom: '8px',
+                        border: '#F99746',
+                        outline: 'none', }}>
+                        <label htmlFor="yourName"></label>
+                        <input style={{ width: '700%',
+                        padding: '8px',
+                        marginBottom: '5px',
+                        border: '3px solid #2980B9 ',
+                         }} type="text" id="yourName" placeholder="Enter your name" />
                       </div>
-                      <div style={{ marginBottom: '20px' }}>
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter email" />
+                      <div style={{ width: '18%',
+                        padding: '8px',
+                        marginBottom: '8px',
+                        border: '#F99746 ',
+                        outline: 'none', }}>
+                        <label htmlFor="email"></label>
+                        <input style={{ width: '700%',
+                        padding: '8px',
+                        marginBottom: '5px',
+                        border: '3px solid #2980B9 ',
+                         }} type="email" id="email" placeholder="Enter email address" />
                       </div>
-                      <button type="button" onClick={closeForm} style={{ marginRight: '10px' }}>Close</button>
-                      <button type="submit">Submit</button>
+                      <div style={{ width: '18%',
+                        padding: '8px',
+                        marginBottom: '8px',
+                        border: '#F99746',
+                        outline: 'none', }}>
+                        <label htmlFor="email"></label>
+                        <input style={{ width: '700%',
+                        padding: '8px',
+                        marginBottom: '5px',
+                        border: '3px solid #2980B9 ',
+                         }} type="email" id="email" placeholder="What’s your team working on 
+                        right now?" />
+                      </div>
+                      <button type="submit" style={{ margin: '12px 0px',
+                        width: '97%',
+                        padding: '5px',
+                        marginBottom: '8px',
+                        border: 'none',
+                        background: '#1c87c9', 
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: '#fff', }}>Submit</button>
+                      <button type="button" onClick={closeForm} style={{ margin: '12px 0px',
+                        width: '97%',
+                        padding: '5px',
+                        border: 'none',
+                        background: '#1c87c9', 
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: '#fff', }}>Close</button>
+                    
                     </form>
                   </div>
                 </>
@@ -575,7 +638,7 @@ h4 {
             <img
               src={img4}
               className="header__img"
-              alt="Minimalist bank items"
+              alt=""
             />
           </div>
         </header>
