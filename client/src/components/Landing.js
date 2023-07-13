@@ -1,4 +1,4 @@
-import react, { useState,useEffect } from "react";
+import react, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import img1 from "../images/logofecile.png";
 import img2 from "../images/second.png";
@@ -6,29 +6,35 @@ import img3 from "../images/teamwork.jpg";
 import img4 from "../images/illustration_Landing.png";
 import img5 from "../images/connect.jpg";
 import Create_workspace from "./Create_workspace";
+import Login from "./Login";
 
 function Landing() {
-
-  
- const navigate = useNavigate();
+  const navigate = useNavigate();
   const [showWorkSpacePopup, setWorkSpacePopup] = useState(false);
+  const [showLoginPopup, setLoginPopup] = useState(false);
   const [check, setCheck] = useState("");
 
   useEffect(() => {
-    setCheck(localStorage.getItem('email_token'))
-  }, [])
+    setCheck(localStorage.getItem("email_token"));
+  }, []);
 
   const handleSignUpClick = () => {
-    if (check==="") {     
-      navigate("/login");
-    }
-    else
-    {
-      console.log(localStorage.getItem("email_token"))
+    if (check === "") {
+      navigate('/login')
+    } else {
       setWorkSpacePopup(true);
     }
   };
 
+  const handleLoginClick = () => {
+    navigate('/login')
+  };
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem("email_token");
+    setCheck("");
+    setLoginPopup(true);
+  };
 
   return (
     <>
@@ -524,20 +530,23 @@ h4 {
                   Signup
                 </a>
               </li>
-              {check===""?
-              <li className="nav__item">
-                <a className="btn" href="/login">
-                  Login
-                </a>
-              </li>
-              :
-              <li className="nav__item">
-                <a className="btn" onClick={localStorage.setItem('email_token', '')}>
-                  Logout
-                </a>
-              </li>
-              }
-              
+              {check === "" ? (
+                <>
+                  <li className="nav__item">
+                    <a className="btn" onClick={handleLoginClick}>
+                      Login
+                    </a>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav__item">
+                    <a className="btn" onClick={handleLogoutClick}>
+                      Logout
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
 
@@ -560,20 +569,21 @@ h4 {
               >
                 Create Workspaces
               </button>
+
+              {/* Popup for creating workspaces */}
               {showWorkSpacePopup && (
-        <div className="popup-container">
-          <div className="popup">
-            <Create_workspace onClose={() => setWorkSpacePopup(false)} />
-          </div>
-        </div>
-      )}
+                <div className="popup-container">
+                  <div className="popup">
+                    <Create_workspace
+                      onClose={() => setWorkSpacePopup(false)}
+                    />
+                  </div>
+                </div>
+              )}
+
             </section>
 
-            <img
-              src={img4}
-              className="header__img"
-              alt=""
-            />
+            <img src={img4} className="header__img" alt="" />
           </div>
         </header>
 
