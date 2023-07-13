@@ -1,5 +1,5 @@
 import react, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import img1 from "../images/Facebook.png";
 import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
@@ -8,20 +8,17 @@ import axios from "axios";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
-
-  
   const [err, seterr] = useState(false);
  const[errors,setErrors]=useState("");
   const [checkemail, setcheckE] = useState(false)
   const [checkpass, setcheckP] = useState(false)
 
-
+  const navigate=useNavigate();
   function login() {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     if (email === "") {
       setErrors("Email is Required");
       seterr(true);
-      //seterr("Email is Required");
     } else if (!regex.test(email)) {
       seterr(true)
       setErrors("Invalid Email");
@@ -37,27 +34,20 @@ function Login() {
         password: password,
       }).then((res) => {
         if (res.data === "Incorrect Email") {
-         // setcheckE(true);
-          //errors.email = "Invalid Email and Password";
-          //setcheckP(false)
           setErrors("Invalid Email")
-          seterr(true)
-          //setlogin_S(0)
+          seterr(true)        
         }
         else if (res.data === "Incorrect Password") {
           seterr(true)
-          //setcheckE(false)
+     
           setErrors("Incorrect Password")
-         // setcheckP(true);
+ 
         }
         else if (res.data === "Login") {
           seterr(false)
           setErrors("");
-          //setcheckP(false);
-          //setcheckE(false);
           localStorage.setItem('email_token', email)
-      //    setEMAIL(email);
-        
+        navigate('/');
         }
 
       })
