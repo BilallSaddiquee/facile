@@ -5,7 +5,7 @@ import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
 import img2 from "../images/signinlogo.png";
 import axios from "axios";
-function Login() {
+function CoworkerLogin() {
   const [email, setEmail] = useState("");
   const [password, setPass] = useState("");
   const [err, seterr] = useState(false);
@@ -14,7 +14,7 @@ function Login() {
   const [checkpass, setcheckP] = useState(false)
 
   const navigate=useNavigate();
-  function login() {
+  function CoworkerLogin() {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     if (email === "") {
       setErrors("Email is Required");
@@ -29,7 +29,7 @@ function Login() {
     }
      else{
 
-      axios.post("http://localhost:3000/login", {
+      axios.post("http://localhost:3000/CoworkerLogin", {
         email: email,
         password: password,
       }).then((res) => {
@@ -201,7 +201,7 @@ body {
             <img src={img2} alt="" />
           </div>
           <div className="name1">
-            <h1>Welcome To Fecile</h1>
+            <h1>CoWorker CoworkerLogin</h1>
           </div>
         </div>
         <div className="input1">
@@ -229,9 +229,9 @@ body {
             ""
           )}
           <a href="">forgot password?</a>
-          <button onClick={login}>Login</button>
+          <button onClick={CoworkerLogin}>CoworkerLogin</button>
           <p>
-            Don't have a account?<Link to="/sign">SignUp</Link>
+            Don't have a account?<Link to="/coworkersignup">SignUp</Link>
           </p>
         </div>
         <div className="using1">
@@ -247,4 +247,4 @@ body {
   );
 }
 
-export default Login;
+export default CoworkerLogin;

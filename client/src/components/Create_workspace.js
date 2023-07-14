@@ -35,11 +35,8 @@ const [err, seterr] = useState(false);
         description:Description,
         userID:userID
       }).then((res) => {
-        
+        onClose();
         console.log(res);
-        
-        
-
       })
     }
   

@@ -21,7 +21,7 @@ function AddCoworker({ onClose }) {
     }
   }
 
-  function sendEmail(e) {
+  function Addworker(e) {
     e.preventDefault();
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     if (email === "") {

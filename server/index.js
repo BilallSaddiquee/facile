@@ -113,8 +113,9 @@ console.log(email,password)
     const cacheCollection = db.collection('cache');
 
     await cacheCollection.insertOne({ userId, statusCode, timestamp, name });
-    console.log("successfully Login")         
-      res.send("Login")
+      const userID = user.rows[0].id;
+      res.json({ userId });
+      console.log(userId)
   } catch (error) {
     console.error("Login error:", error.message);
     //res.status(500).json({ error: "Server error" });
@@ -150,11 +151,9 @@ app.post('/workspaces', async (req, res) => {
     const result = await pool.query(insertQuery, insertValues);
 
     const newWorkspaceId = result.rows[0].id;
-
-    res.status(201).json({ message: 'Workspace created successfully', workspaceId: newWorkspaceId, adminId });
+    res.send("Work Created Succcess")
   } catch (error) {
-    console.error('Error creating workspace:', error);
-    res.status(500).json({ message: 'Error creating workspace' });
+    res.send("error")
   }
 });
 
