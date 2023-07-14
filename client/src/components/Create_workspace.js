@@ -37,13 +37,9 @@ const [err, seterr] = useState(false);
         description:Description,
         userID:userID
       }).then((res) => {
-        {
-        console.log("sdfghjk",res.data.newWorkspaceId)
-        localStorage.setItem("workID",res.data.newWorkspaceId)
-        console.log(localStorage.getItem("workID"));
+        localStorage.setItem("workID",res.data.newWorkspaceId);
         navigate("/")
-        onClose()
-        }
+        onClose()       
       })
     }
   

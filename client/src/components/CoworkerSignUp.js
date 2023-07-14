@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState, useRef, useEffect,  } from "react";
+import { useNavigate, Link,useLocation } from "react-router-dom";
 import img1 from "../images/Facebook.png";
 import img2 from "../images/Illustration.png";
 import img3 from "../images/instagram.png";
@@ -10,6 +10,18 @@ import Axios from "axios";
 import CoworkerLogin from "./CoworkerLogin";
 
 function CoworkerSignup() {
+
+ 
+ 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const workSpaceID = queryParams.get("id");
+  console.log(workSpaceID);
+
+  useEffect(() => {
+    console.log("workSpaceID:", workSpaceID);
+  }, [workSpaceID]);
+
   const [openModal, setOpenModal] = useState(false);
   const [showCoLoginPopup, setShowCoLoginPopup] = useState(false);
   const [workID, setworkID] = useState("");
@@ -37,6 +49,10 @@ function CoworkerSignup() {
     e.preventDefault();
     console.log(email);
   };
+
+
+
+
 
   //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
   //after that calling post api to send data in database using axios
