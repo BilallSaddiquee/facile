@@ -1,5 +1,5 @@
 import react, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import img1 from "../images/Facebook.png";
 import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
@@ -7,18 +7,20 @@ import img2 from "../images/signinlogo.png";
 import axios from "axios";
 function Create_workspace({ onClose }){
  
-  const [password, setPass] = useState("");
 
-  
 const [err, seterr] = useState(false);
  const[errors,setErrors]=useState("");
  const [userID, setUser] = useState("");
   const [workSpacename, setWorkSpaceName] = useState("");
   const [Description, setDescription] = useState("");
+
   useEffect(() => {
     setUser(localStorage.getItem("email_token"));
   }, []);
-  function login() {
+
+  const navigate=useNavigate();
+
+  function create() {
  if (workSpacename === "") {
         setErrors("WorkSpace Name is Required");
         seterr(true);
@@ -35,8 +37,13 @@ const [err, seterr] = useState(false);
         description:Description,
         userID:userID
       }).then((res) => {
-        onClose();
-        console.log(res);
+        {
+        console.log("sdfghjk",res.data.newWorkspaceId)
+        localStorage.setItem("workID",res.data.newWorkspaceId)
+        console.log(localStorage.getItem("workID"));
+        navigate("/")
+        onClose()
+        }
       })
     }
   
@@ -216,7 +223,7 @@ body {
           ) : (
             ""
           )}
-          <button onClick={login}>Create WorkSpace</button>
+          <button onClick={create}>Create WorkSpace</button>
           <button onClick={onClose}>Close</button>
          
         </div>

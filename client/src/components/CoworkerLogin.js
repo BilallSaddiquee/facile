@@ -10,8 +10,6 @@ function CoworkerLogin() {
   const [password, setPass] = useState("");
   const [err, seterr] = useState(false);
  const[errors,setErrors]=useState("");
-  const [checkemail, setcheckE] = useState(false)
-  const [checkpass, setcheckP] = useState(false)
 
   const navigate=useNavigate();
   function CoworkerLogin() {
@@ -33,23 +31,22 @@ function CoworkerLogin() {
         email: email,
         password: password,
       }).then((res) => {
-        if (res.data === "Incorrect Email") {
-          setErrors("Invalid Email")
+        if (res.data === "Incorrect email or password") {
+          setErrors("Incorrect Email")
           seterr(true)        
         }
-        else if (res.data === "Incorrect Password") {
+        else if (res.data === "Incorrect password") {
           seterr(true)
-     
           setErrors("Incorrect Password")
  
-        }
-        else if (res.data.userId !== "") {
-          seterr(false)
-          setErrors("");
-          console.log("helo",res.data.userId)
-          localStorage.setItem('email_token_coworker', res.data.userId)
-          navigate('/');
-        }
+        } else if (res.data.userId !== "") {
+            seterr(false)
+            setErrors("");
+            console.log("helo",res.data.userId)
+            localStorage.setItem('email_token', res.data.userId)
+            navigate('/Chatpage');
+          }
+     
 
       })
     }

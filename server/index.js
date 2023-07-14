@@ -65,7 +65,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// Create a new user
+// login a new user
 app.post("/login", async (req, res) => {
   const password = req.body.password;
   const email = req.body.email;
@@ -138,10 +138,9 @@ app.post('/workspaces', async (req, res) => {
 
     const checkResult = await pool.query(checkQuery, checkValues);
 
-    if (checkResult.rowCount > 0) {
+    if (checkResult.rows.length > 0) {
       // Workspace with the same name already exists
-      res.status(409).json({ message: 'Workspace with the same name already exists' });
-      return;
+      return res.send('Workspace already exists');
     }
 
     // Insert the workspace into the "workspace" table
@@ -150,10 +149,16 @@ app.post('/workspaces', async (req, res) => {
 
     const result = await pool.query(insertQuery, insertValues);
 
-    const newWorkspaceId = result.rows[0].id;
-    res.send("Work Created Succcess")
+    if (result && result.rows && result.rows.length > 0) {
+      const newWorkspaceId = result.rows[0].id;
+      res.json({ newWorkspaceId });
+      console.log("send id workspace",newWorkspaceId);
+    } else {
+      throw new Error('Failed to create workspace');
+    }
   } catch (error) {
-    res.send("error")
+    console.error("Workspace creation error:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -195,18 +200,18 @@ app.post('/channels', async (req, res) => {
 // Endpoint to add a new co-worker to workspace
 app.post('/co-workers', async (req, res) => {
   try {
-    const { email, name, password, workspaceIds } = req.body;
+    const { email, name, password,  workspaceIds } = req.body;
 
+    console.log("GET WORKSPACE ID",workspaceIds)
     // Check if the co-worker already exists
     const checkQuery = 'SELECT id FROM co_workers WHERE email = $1';
     const checkValues = [email];
 
     const checkResult = await pool.query(checkQuery, checkValues);
 
-    if (checkResult.rowCount > 0) {
+    if (checkResult.rows.length > 0) {
       // Co-worker with the same email already exists
-      res.status(409).json({ message: 'Co-worker with the same email already exists' });
-      return;
+      return res.status(409).json({ message: 'Co-worker with the same email already exists' });
     }
 
     // Insert the co-worker into the "co_workers" table
@@ -216,12 +221,17 @@ app.post('/co-workers', async (req, res) => {
     const result = await pool.query(insertQuery, insertValues);
 
     const newCoWorkerId = result.rows[0].id;
+console.log("hleo", workspaceIds)
+    if (workspaceIds > 0) {
+      // Associate the co-worker with the specified workspaces
+      const workspaceInsertQuery = 'INSERT INTO co_worker_workspace (co_worker_id, workspace_id) VALUES ($1, $2)';
+      var workspaceInsertValues = [];
 
-    // Associate the co-worker with the specified workspaces
-    const workspaceInsertQuery = 'INSERT INTO co_worker_workspace (co_worker_id, workspace_id) VALUES ($1, $2)';
-    const workspaceInsertValues = workspaceIds.map(workspaceId => [newCoWorkerId, workspaceId]);
+      
+        workspaceInsertValues = [newCoWorkerId,  workspaceIds];
 
-    await Promise.all(workspaceInsertValues.map(values => pool.query(workspaceInsertQuery, values)));
+      await pool.query(workspaceInsertQuery, workspaceInsertValues);
+    }
 
     res.status(201).json({ message: 'Co-worker added successfully', coWorkerId: newCoWorkerId });
   } catch (error) {
@@ -229,6 +239,7 @@ app.post('/co-workers', async (req, res) => {
     res.status(500).json({ message: 'Error adding co-worker' });
   }
 });
+
 
 //Login Co-worker
 app.post("/loginCo-worker", async (req, res) => {
@@ -243,16 +254,15 @@ app.post("/loginCo-worker", async (req, res) => {
     );
 
     if (user.rows.length === 0) {
-      console.log("Incorrect email or password");
-      res.status(401).json({ error: "Incorrect Email" });
+      console.log("Incorrect password email");
+      res.send("Incorrect email or password")
       return;
     }
 
     const storedPassword = user.rows[0].password;
-
     if (password !== storedPassword) {
       console.log("Incorrect password");
-      res.status(401).json({ error: "Incorrect Password" });
+      res.send("Incorrect password")
       return;
     }
 
@@ -276,7 +286,6 @@ app.post("/loginCo-worker", async (req, res) => {
     await mongoClient.connect();
     const db = mongoClient.db('cache');
     const cacheCollection = db.collection('cache');
-
     await cacheCollection.insertOne({ userId, timestamp, name });
 
     res.json({ userId }); // Send the userId in the response

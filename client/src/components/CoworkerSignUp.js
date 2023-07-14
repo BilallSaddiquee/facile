@@ -12,10 +12,14 @@ import CoworkerLogin from "./CoworkerLogin";
 function CoworkerSignup() {
   const [openModal, setOpenModal] = useState(false);
   const [showCoLoginPopup, setShowCoLoginPopup] = useState(false);
-
+  const [workID, setworkID] = useState("");
   const handleCoworkerLoginClick = () => {
     setShowCoLoginPopup(true);
   };
+
+  useEffect(() => {
+    setworkID(localStorage.getItem("workID"));
+  }, []);
 
   const navigate = useNavigate();
 
@@ -37,6 +41,8 @@ function CoworkerSignup() {
   //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
   //after that calling post api to send data in database using axios
   const register = () => {
+    setworkID(localStorage.getItem("workID"));
+    console.log(localStorage.getItem("workID"));
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     // Axios.post("http://localhost:3006/getEmail", {
     //     email: email,
@@ -65,19 +71,18 @@ function CoworkerSignup() {
     } else if (password !== Cpassword) {
       setErrors("Password Desn't Match");
       seterr(true);
-    } 
-     else {
+    } else {
       seterr(false);
       setErrors("");
-      console.log(name, email, password);
       Axios.post("http://localhost:3000/co-workers", {
         name: name,
         password: password,
         email: email,
+        workspaceIds: workID,
         //image:capturedImage
       }).then((response) => {
         console.log(response);
-      
+
         setShowCoLoginPopup(true);
       });
     }
@@ -131,7 +136,6 @@ function CoworkerSignup() {
     }
   };
 
-
   //Set values and matching with password also check errors
   const CpassHandler = (e) => {
     setCPass(e.target.value);
@@ -146,12 +150,7 @@ function CoworkerSignup() {
     }
   };
 
-  
-
   return (
-
-    
-    
     <div className="container">
       <div className="illu">
         <img src={img2} alt="" />
@@ -202,7 +201,6 @@ function CoworkerSignup() {
             />
           </div>
 
-         
           {err ? (
             <span
               className="error-message"
@@ -229,29 +227,24 @@ function CoworkerSignup() {
           </div>
         </form>
         <p>
-        Already Have Account?{" "}
+          Already Have Account?{" "}
+          <Link to="#" onClick={handleCoworkerLoginClick}>
+            Log In
+          </Link>
+        </p>
 
-        <Link to="#" onClick={handleCoworkerLoginClick}>
-          Log In
-        </Link>
-
-      </p>
-      
-      {showCoLoginPopup && (
-        <div className="popup-container">
-          <div className="popup">
-            <CoworkerLogin onClose={() => setShowCoLoginPopup(false)} />
+        {showCoLoginPopup && (
+          <div className="popup-container">
+            <div className="popup">
+              <CoworkerLogin onClose={() => setShowCoLoginPopup(false)} />
+            </div>
           </div>
-        </div>
-      )}
-         <div className="form-separator">
+        )}
+        <div className="form-separator">
           <p>OR</p>
-          
         </div>
         <div className="login-through">
-          <p>
-            Login through
-          </p>
+          <p>Login through</p>
           {/*  */}
         </div>
         <div className="logos-row">

@@ -1,8 +1,6 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 
-// function Chatpage() 
-// {
- 
+
 function Chatpage() {
     const toggleDropdown1 = () => {
       document.getElementById("Dropdown1").classList.toggle("show");
