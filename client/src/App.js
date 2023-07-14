@@ -5,7 +5,6 @@ import Login from "./components/Login";
 import Landing from "./components/Landing";
 import Create_workspace from "./components/Create_workspace";
 
-
 function App() {
   return (
     <div className="App">
