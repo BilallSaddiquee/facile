@@ -29,7 +29,7 @@ function CoworkerLogin() {
     }
      else{
 
-      axios.post("http://localhost:3000/CoworkerLogin", {
+      axios.post("http://localhost:3000/loginCo-worker", {
         email: email,
         password: password,
       }).then((res) => {
@@ -47,7 +47,7 @@ function CoworkerLogin() {
           seterr(false)
           setErrors("");
           console.log("helo",res.data.userId)
-          localStorage.setItem('email_token', res.data.userId)
+          localStorage.setItem('email_token_coworker', res.data.userId)
           navigate('/');
         }
 

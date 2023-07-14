@@ -230,7 +230,66 @@ app.post('/co-workers', async (req, res) => {
   }
 });
 
+//Login Co-worker
+app.post("/loginCo-worker", async (req, res) => {
+  const password = req.body.password;
+  const email = req.body.email;
+  console.log(email, password);
 
+  try {
+    const user = await pool.query(
+      `SELECT * FROM co_workers WHERE email = $1`,
+      [email]
+    );
+
+    if (user.rows.length === 0) {
+      console.log("Incorrect email or password");
+      res.status(401).json({ error: "Incorrect Email" });
+      return;
+    }
+
+    const storedPassword = user.rows[0].password;
+
+    if (password !== storedPassword) {
+      console.log("Incorrect password");
+      res.status(401).json({ error: "Incorrect Password" });
+      return;
+    }
+
+    const userId = user.rows[0].id;
+    const name = user.rows[0].name;
+    const timestamp = new Date().toISOString();
+
+    // Store cache in Redis
+    const cacheKey = `login:${userId}`;
+    const cacheData = JSON.stringify({ timestamp, userId, name });
+
+    redisClient.setex(cacheKey, 3600, cacheData, (err, reply) => {
+      if (err) {
+        console.error('Error storing cache in Redis:', err);
+      } else {
+        console.log('Cache stored in Redis:', reply);
+      }
+    });
+
+    // Store cache in MongoDB
+    await mongoClient.connect();
+    const db = mongoClient.db('cache');
+    const cacheCollection = db.collection('cache');
+
+    await cacheCollection.insertOne({ userId, timestamp, name });
+
+    res.json({ userId }); // Send the userId in the response
+
+    console.log(userId);
+  } catch (error) {
+    console.error("Login error:", error.message);
+    //res.status(500).json({ error: "Server error" });
+  } finally {
+    //await mongoClient.close();
+    //redisClient.quit();
+  }
+});
 
 // Endpoint to add a new co-worker to channel
 app.post('/co-workers/:id', async (req, res) => {
