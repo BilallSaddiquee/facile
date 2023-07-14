@@ -7,10 +7,12 @@ import img4 from "../images/illustration_Landing.png";
 import img5 from "../images/connect.jpg";
 import Create_workspace from "./Create_workspace";
 import Login from "./Login";
+import AddCoworker from "./AddCoworker";
 
 function Landing() {
   const navigate = useNavigate();
   const [showWorkSpacePopup, setWorkSpacePopup] = useState(false);
+  const [addCowroker, setAddPopup] = useState(false);
   const [showLoginPopup, setLoginPopup] = useState(false);
   const [check, setCheck] = useState("");
 
@@ -18,7 +20,7 @@ function Landing() {
     setCheck(localStorage.getItem("email_token"));
   }, []);
 
-  const handleSignUpClick = () => {
+  const handleWorkClick = () => {
     if (check === "") {
       navigate('/login')
     } else {
@@ -30,10 +32,14 @@ function Landing() {
     navigate('/login')
   };
 
+  const handleAddClick=()=>{
+    setAddPopup(true)
+  }
   const handleLogoutClick = () => {
     localStorage.removeItem("email_token");
-    setCheck("");
-    setLoginPopup(true);
+  setCheck("");
+  setLoginPopup(true);
+  navigate("/login");
   };
 
   return (
@@ -564,7 +570,7 @@ h4 {
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={handleSignUpClick}
+                onClick={handleWorkClick}
                 style={{ marginBottom: "20px" }}
               >
                 Create Workspaces
@@ -576,6 +582,26 @@ h4 {
                   <div className="popup">
                     <Create_workspace
                       onClose={() => setWorkSpacePopup(false)}
+                    />
+                  </div>
+                </div>
+              )}
+{/* ADD COWORKER TEMP CODE */}
+<button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleAddClick}
+                style={{ marginBottom: "20px" }}
+              >
+                Add member
+              </button>
+
+              {/* Popup for creating workspaces */}
+              {addCowroker && (
+                <div className="popup-container">
+                  <div className="popup">
+                    <AddCoworker
+                      onClose={() => setAddPopup(false)}
                     />
                   </div>
                 </div>

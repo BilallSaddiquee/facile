@@ -42,6 +42,7 @@ app.get('/users/:id', async (req, res) => {
 
 // Sign up
 app.post('/signup', async (req, res) => {
+  console.log("THIS IS Signup API")
   const { name, email, password, contact } = req.body;
 
   try {
@@ -128,7 +129,7 @@ console.log(email,password)
 // Endpoint to create a new workspace
 app.post('/workspaces', async (req, res) => {
   try {
-    const { name, description, adminId } = req.body;
+    const { name, description, userID } = req.body;
 
     // Check if the workspace already exists
     const checkQuery = 'SELECT id FROM workspace WHERE name = $1';
@@ -144,7 +145,7 @@ app.post('/workspaces', async (req, res) => {
 
     // Insert the workspace into the "workspace" table
     const insertQuery = 'INSERT INTO workspace (name, description, admin_id) VALUES ($1, $2, $3) RETURNING id';
-    const insertValues = [name, description, adminId];
+    const insertValues = [name, description, userID];
 
     const result = await pool.query(insertQuery, insertValues);
 
