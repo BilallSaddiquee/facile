@@ -1,6 +1,7 @@
 import react, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
+import img1 from "../images/logofecile.png";
 import axios from "axios";
 function AddCoworker({ onClose }) {
   const [email, setEmail] = useState("");
