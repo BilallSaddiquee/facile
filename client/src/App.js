@@ -14,7 +14,6 @@ function App() {
       <Route path="/login" element={<Login />}></Route> 
       <Route path="/" element={<Landing />}></Route> 
       <Route path="/work" element={<Create_workspace />}></Route> 
-
        
       </Routes>
      </BrowserRouter>
