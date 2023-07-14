@@ -42,6 +42,7 @@ app.get('/users/:id', async (req, res) => {
 
 // Sign up
 app.post('/signup', async (req, res) => {
+  console.log("THIS IS Signup API")
   const { name, email, password, contact } = req.body;
 
   try {
@@ -128,7 +129,7 @@ console.log(email,password)
 // Endpoint to create a new workspace
 app.post('/workspaces', async (req, res) => {
   try {
-    const { name, description, adminId } = req.body;
+    const { name, description, userID } = req.body;
 
     // Check if the workspace already exists
     const checkQuery = 'SELECT id FROM workspace WHERE name = $1';
@@ -144,7 +145,7 @@ app.post('/workspaces', async (req, res) => {
 
     // Insert the workspace into the "workspace" table
     const insertQuery = 'INSERT INTO workspace (name, description, admin_id) VALUES ($1, $2, $3) RETURNING id';
-    const insertValues = [name, description, adminId];
+    const insertValues = [name, description, userID];
 
     const result = await pool.query(insertQuery, insertValues);
 
@@ -192,7 +193,7 @@ app.post('/channels', async (req, res) => {
 });
 
 
-// Endpoint to add a new co-worker
+// Endpoint to add a new co-worker to workspace
 app.post('/co-workers', async (req, res) => {
   try {
     const { email, name, password, workspaceIds } = req.body;
@@ -229,6 +230,104 @@ app.post('/co-workers', async (req, res) => {
     res.status(500).json({ message: 'Error adding co-worker' });
   }
 });
+
+
+
+// Endpoint to add a new co-worker to channel
+app.post('/co-workers/:id', async (req, res) => {
+  try {
+    const coWorkerId = req.params.id;
+    const { channelIds } = req.body;
+
+    // Check if the co-worker already exists
+    const checkQuery = 'SELECT * FROM co_workers WHERE id = $1';
+    const checkValues = [coWorkerId];
+
+    const checkResult = await pool.query(checkQuery, checkValues);
+
+    if (checkResult.rowCount === 0) {
+      // Co-worker with the given ID does not exist
+      res.status(404).json({ message: 'Co-worker does not exist' });
+      return;
+    }
+
+    // Associate the co-worker with the specified channels
+    const insertQuery = 'INSERT INTO co_worker_group (co_worker_id, channel_id) VALUES ($1, $2)';
+    const insertValues = channelIds.map(channelId => [coWorkerId, channelId]);
+
+    await Promise.all(insertValues.map(values => pool.query(insertQuery, values)));
+
+    res.status(201).json({ message: 'Co-worker added to channels successfully' });
+  } catch (error) {
+    console.error('Error adding co-worker to channels:', error);
+    res.status(500).json({ message: 'Error adding co-worker to channels' });
+  }
+});
+
+
+// Endpoint to remove a co-worker from a channel
+app.delete('/channels/:channelId/co-workers/:coWorkerId', async (req, res) => {
+  try {
+    const channelId = req.params.channelId;
+    const coWorkerId = req.params.coWorkerId;
+
+    // Check if the co-worker-channel association exists
+    const checkAssociationQuery = 'SELECT * FROM co_worker_group WHERE channel_id = $1 AND co_worker_id = $2';
+    const checkAssociationValues = [channelId, coWorkerId];
+
+    const associationResult = await pool.query(checkAssociationQuery, checkAssociationValues);
+
+    if (associationResult.rowCount === 0) {
+      // Co-worker is not associated with the channel
+      res.status(404).json({ message: 'Co-worker is not associated with the channel' });
+      return;
+    }
+
+    // Remove the co-worker from the channel in the "co_worker_group" table
+    const deleteAssociationQuery = 'DELETE FROM co_worker_group WHERE channel_id = $1 AND co_worker_id = $2';
+    const deleteAssociationValues = [channelId, coWorkerId];
+
+    await pool.query(deleteAssociationQuery, deleteAssociationValues);
+
+    res.status(200).json({ message: 'Co-worker removed from the channel successfully' });
+  } catch (error) {
+    console.error('Error removing co-worker from the channel:', error);
+    res.status(500).json({ message: 'Error removing co-worker from the channel' });
+  }
+});
+
+
+
+
+
+
+
+// Endpoint to remove a co-worker
+app.delete('/co-workers/:id', async (req, res) => {
+  try {
+    const coWorkerId = req.params.id;
+
+    // Delete the co-worker's data from the "co_worker_workspace" table
+    const deleteWorkspaceQuery = 'DELETE FROM co_worker_workspace WHERE co_worker_id = $1';
+    const deleteWorkspaceValues = [coWorkerId];
+
+    await pool.query(deleteWorkspaceQuery, deleteWorkspaceValues);
+
+    // Delete the co-worker from the "co_workers" table
+    const deleteQuery = 'DELETE FROM co_workers WHERE id = $1';
+    const deleteValues = [coWorkerId];
+
+    await pool.query(deleteQuery, deleteValues);
+
+    res.status(200).json({ message: 'Co-worker and associated data removed successfully' });
+  } catch (error) {
+    console.error('Error removing co-worker:', error);
+    res.status(500).json({ message: 'Error removing co-worker' });
+  }
+});
+
+
+
 
 
 

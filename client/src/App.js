@@ -11,7 +11,7 @@ function App() {
     <div className="App">
      <BrowserRouter>
       <Routes>     
-      <Route path="/sign" element={<SignUp />}></Route> 
+      <Route path="/signup" element={<SignUp />}></Route> 
       <Route path="/login" element={<Login />}></Route> 
       <Route path="/land" element={<Landing />}></Route> 
       <Route path="/work" element={<Create_workspace />}></Route> 

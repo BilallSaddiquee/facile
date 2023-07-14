@@ -47,7 +47,7 @@ function Login() {
           seterr(false)
           setErrors("");
           localStorage.setItem('email_token', email)
-        navigate('/');
+          navigate('/');
         }
 
       })

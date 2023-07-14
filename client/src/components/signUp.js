@@ -73,7 +73,7 @@ function SignUp() {
       seterr(false);
       setErrors("");
       console.log(name, email, password, contact);
-      Axios.post("http://localhost:3000/signUp", {
+      Axios.post("http://localhost:3000/signup", {
         name: name,
         password: password,
         contact: contact,

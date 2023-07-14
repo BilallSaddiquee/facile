@@ -6,40 +6,34 @@ import img4 from "../images/Linkdin.png";
 import img2 from "../images/signinlogo.png";
 import axios from "axios";
 function Create_workspace({ onClose }){
-  const [email, setEmail] = useState("");
+ 
   const [password, setPass] = useState("");
 
   
-  const [err, seterr] = useState(false);
+const [err, seterr] = useState(false);
  const[errors,setErrors]=useState("");
-  const [checkemail, setcheckE] = useState(false)
-  const [checkpass, setcheckP] = useState(false)
-
-  const [name, setName] = useState("");
+ const [userID, setUser] = useState("");
   const [workSpacename, setWorkSpaceName] = useState("");
   const [Description, setDescription] = useState("");
-
+  useEffect(() => {
+    setUser(localStorage.getItem("email_token"));
+  }, []);
   function login() {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (name === "") {
-      setErrors("Email is Required");
-      seterr(true);
-      //seterr("Email is Required");
-    } else if (workSpacename === "") {
+ if (workSpacename === "") {
         setErrors("WorkSpace Name is Required");
         seterr(true);
-        //seterr("Email is Required");
       } 
     else if (Description === "") {
         setErrors("Description is Required");
         seterr(true);
-        //seterr("Email is Required");
+       
       } 
      else{
 
-      axios.post("http://localhost:3000/login", {
-        email: email,
-        password: password,
+      axios.post("http://localhost:3000/workspaces", {
+        name: workSpacename,
+        description:Description,
+        userID:userID
       }).then((res) => {
         
         console.log(res);
@@ -54,16 +48,7 @@ function Create_workspace({ onClose }){
 
 
 
-  //Set value and check errors of Email using regex
-  const nameHandler = (e) => {
-    setName(e.target.value);
-    if (e.target.value === "") {
-      setErrors("Name is Required");
-      seterr(true);
-    } else {
-      seterr(false);
-    }
-  };
+
   const worknameHandler = (e) => {
     setWorkSpaceName(e.target.value);
     if (e.target.value === "") {
@@ -212,13 +197,6 @@ body {
           </div>
         </div>
         <div className="input1">
-          <input
-            type="name"
-            placeholder="Your Name"
-            autoComplete="on"
-            onChange={nameHandler}
-            value={name}
-          />
           <input
             type="WorkSpaceName"
             placeholder="Work Space  Name"
