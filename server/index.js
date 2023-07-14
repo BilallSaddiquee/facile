@@ -47,14 +47,14 @@ app.post('/signup', async (req, res) => {
 
   try {
     // Check if the email already exists
-    const emailExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const emailExists = await pool.query('SELECT * FROM admin_users WHERE email = $1', [email]);
     if (emailExists.rows.length > 0) {
       return res.status(400).json({ error: 'Email already exists' });
     }
     let newUser;
     bcrypt.hash(password, 10).then(async (hash) => {
         newUser = await pool.query(
-        'INSERT INTO users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO admin_users (name, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING *',
         [name, email, hash, contact]
       );
      res.json(newUser.rows[0]);
@@ -72,7 +72,7 @@ app.post("/login", async (req, res) => {
 console.log(email,password)
   try {
     const user = await pool.query(
-      `SELECT * FROM users WHERE email = $1`,
+      `SELECT * FROM admin_users WHERE email = $1`,
       [email]
     );
 
@@ -367,7 +367,7 @@ app.put('/users/:id', async (req, res) => {
   const { name, email, password, contact } = req.body;
   try {
     const updatedUser = await pool.query(
-      'UPDATE users SET name = $1, email = $2, password = $3, contact = $4 WHERE id = $5 RETURNING *',
+      'UPDATE admin_users SET name = $1, email = $2, password = $3, contact = $4 WHERE id = $5 RETURNING *',
       [name, email, password, contact, id]
     );
     if (updatedUser.rows.length === 0) {
@@ -384,7 +384,7 @@ app.put('/users/:id', async (req, res) => {
 app.delete('/users/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedUser = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [id]);
+    const deletedUser = await pool.query('DELETE FROM admin_users WHERE id = $1 RETURNING *', [id]);
     if (deletedUser.rows.length === 0) {
       return res.status(404).json({ error: 'User not found' });
     }
