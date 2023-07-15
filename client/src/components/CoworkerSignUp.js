@@ -16,6 +16,7 @@ function CoworkerSignup() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const workSpaceID = queryParams.get("id");
+  const getemail = queryParams.get("email");
   console.log(workSpaceID);
 
   useEffect(() => {
@@ -194,7 +195,7 @@ function CoworkerSignup() {
             <input
               type="email"
               placeholder="Email"
-              value={email}
+              value={getemail}
               onChange={EmailHandler}
             />
           </div>

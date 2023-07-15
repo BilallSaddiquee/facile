@@ -1,4 +1,12 @@
 import React,{useEffect} from 'react'
+import img1 from "../images/add-user.png";
+import img2 from "../images/turn-off.png";
+import img3 from "../images/plus.png";
+import img4 from "../images/settings.png";
+import img5 from "../images/send.png";
+import img6 from "../images/zoom.png";
+import img7 from "../images/microphone.png";
+import img8 from "../images/attachment.png";
 
 
 

@@ -12,7 +12,7 @@ import AddCoworker from "./AddCoworker";
 function Landing() {
   const navigate = useNavigate();
   const [showWorkSpacePopup, setWorkSpacePopup] = useState(false);
-  const [addCowroker, setAddPopup] = useState(false);
+ 
   const [showLoginPopup, setLoginPopup] = useState(false);
   const [check, setCheck] = useState("");
 
@@ -32,9 +32,6 @@ function Landing() {
     navigate('/login')
   };
 
-  const handleAddClick=()=>{
-    setAddPopup(true)
-  }
   const handleLogoutClick = () => {
     localStorage.removeItem("email_token");
   setCheck("");
@@ -586,27 +583,6 @@ h4 {
                   </div>
                 </div>
               )}
-{/* ADD COWORKER TEMP CODE */}
-<button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleAddClick}
-                style={{ marginBottom: "20px" }}
-              >
-                Add member
-              </button>
-
-              {/* Popup for creating workspaces */}
-              {addCowroker && (
-                <div className="popup-container">
-                  <div className="popup">
-                    <AddCoworker
-                      onClose={() => setAddPopup(false)}
-                    />
-                  </div>
-                </div>
-              )}
-
             </section>
 
             <img src={img4} className="header__img" alt="" />
