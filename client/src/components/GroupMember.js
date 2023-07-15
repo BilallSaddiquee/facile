@@ -32,17 +32,34 @@ function GroupMemberPopup({ onClose }) {
   };
 
   const handleRemoveMember = (member) => {
-    setGroupMembers(prevMembers => prevMembers.filter(m => m.id !== member.id));
-    setRemainingMembers(prevMembers => [...prevMembers, member]);
+    // Remove member from the group in the database using Axios
+    
+    axios.delete(`http://localhost:3000/Del_Member/${member.id}/${channelID}`)
+      .then(response => {
+        setGroupMembers(prevMembers => prevMembers.filter(m => m.id !== member.id));
+        setRemainingMembers(prevMembers => [...prevMembers, member]);
+      })
+      .catch(error => {
+        console.error('Error removing member from group:', error);
+      });
   };
 
   const handleAddMember = (member) => {
-    setGroupMembers(prevMembers => [...prevMembers, member]);
-    setRemainingMembers(prevMembers => prevMembers.filter(m => m.id !== member.id));
+    // Add member to the group in the database using Axios
+    console.log("iddddd",member.id,channelID)
+    const coworkerID= member.id;
+    axios.post(`http://localhost:3000/Add_Member/${coworkerID}/${channelID}`)
+      .then(response => {
+        setGroupMembers(prevMembers => [...prevMembers, member]);
+        setRemainingMembers(prevMembers => prevMembers.filter(m => m.id !== member.id));
+      })
+      .catch(error => {
+        console.error('Error adding member to group:', error);
+      });
   };
 
   const filteredMembers = [...groupMembers, ...remainingMembers].filter((member, index, self) =>
-    index === self.findIndex(m => m.name === member.name)
+    index === self.findIndex(m => m.id === member.id)
   ).filter(member =>
     member.name.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -137,6 +154,7 @@ function GroupMemberPopup({ onClose }) {
           }
         `}
       </style>
+
 
       <div className="group-member-popup">
         <div className="group-member-container">
