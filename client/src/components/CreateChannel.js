@@ -32,6 +32,7 @@ const navigate= useNavigate();
     }
   }
 
+  
   const handleInputFocus = () => {
     setInputFocused(true);
   };

@@ -488,3 +488,17 @@ app.get("/Get_Channels", (req, res) => {
 
   })
 })
+
+//get group members
+
+app.get('/Get_GroupMembers/:groupId', (req, res) => {
+  const groupId = req.params.groupId;
+  console.log("id", groupId)
+  pool.query(`SELECT co_workers.id, co_workers.name
+  FROM co_workers
+  INNER JOIN co_worker_group ON co_workers.id = co_worker_group.co_worker_id
+  WHERE co_worker_group.channel_id = ${groupId};`, (err, result) => {
+    res.send(result);
+
+})
+});

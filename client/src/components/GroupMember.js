@@ -1,204 +1,188 @@
-import react, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import img1 from "../images/logofecile.png";
-import img2 from "../images/second.png";
-import img3 from "../images/teamwork.jpg";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-import axios from "axios";
-function AddCoworker({ onClose }){
- 
-  const [email, setEmail] = useState("");
-  const [err, seterr] = useState(false);
- const[errors,setErrors]=useState("");
-  
+function GroupMemberPopup({ onClose }) {
+  const [searchText, setSearchText] = useState('');
+  const channelID = localStorage.getItem("ChannelID");
+  const [groupMembers, setGroupMembers] = useState([]);
+  const [remainingMembers, setRemainingMembers] = useState([]);
 
-  function Addworker() {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (email === "") {
-      setErrors("Email is Required");
-      seterr(true);
-    } else if (!regex.test(email)) {
-      seterr(true)
-      setErrors("Invalid Email");
-    }else{
+  useEffect(() => {
+    // Fetch group members based on the channel ID using Axios
+    axios.get(`http://localhost:3000/Get_GroupMembers/${channelID}`)
+      .then(response => {
+        setGroupMembers(response.data.rows);
+      })
+      .catch(error => {
+        console.error('Error fetching group members:', error);
+      });
 
-    }
-  
+    // Fetch remaining coworkers using Axios
+    axios.get('http://localhost:3000/Get_CoWorkers')
+      .then(response => {
+        setRemainingMembers(response.data.rows);
+      })
+      .catch(error => {
+        console.error('Error fetching coworkers:', error);
+      });
+  }, [channelID]);
+
+  const handleSearchChange = (e) => {
+    setSearchText(e.target.value);
   };
 
-
-const EmailHandler = (e) => {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-
-    setEmail(e.target.value);
-    if (e.target.value === "") {
-      seterr(true);
-      setErrors("Email is Required");
-    } else if (!regex.test(e.target.value)) {
-      seterr(true);
-      setErrors("Invalid Email");
-    } else {
-      seterr(false);
-    }
+  const handleRemoveMember = (member) => {
+    setGroupMembers(prevMembers => prevMembers.filter(m => m.id !== member.id));
+    setRemainingMembers(prevMembers => [...prevMembers, member]);
   };
 
+  const handleAddMember = (member) => {
+    setGroupMembers(prevMembers => [...prevMembers, member]);
+    setRemainingMembers(prevMembers => prevMembers.filter(m => m.id !== member.id));
+  };
 
- 
+  const filteredMembers = [...groupMembers, ...remainingMembers].filter((member, index, self) =>
+    index === self.findIndex(m => m.name === member.name)
+  ).filter(member =>
+    member.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
- 
   return (
     <>
       <style>
-        {
-          `
-
-          img {
-            margin: 10px;
-          }
-
-          h2 {
-            paddingTop: 10px;
-            font-size: 3rem;
-            line-height: 1;
+        {`
+          .group-member-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
-            marginLeft: 10px;
-            }
-
-          span{
-            margin: 10px;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.5);
           }
 
-
-          Group-Member button{
-            grid-column: 1 / span 2;
-            justify-self: center;
-            margin-top: 1rem;
+          .group-member-container {
+            width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
           }
-          button {
-            font-size: 1.7rem;
-            padding: 8px;
-            margin: 3px;
-            border: 1px solid #ddd;
-            border-radius: 0.5rem;
-            }
-          
-          input {
-              font-size: 1.7rem;
-              padding: 10px;
-              width: 100%;
-              margin: 4px;
-              border: 1px solid #ddd;
-              border-radius: 0.5rem;
-            }
 
-          /* GroupMemberForm.css */
-            .box {
-            background-color: #eef2f5;
-            width: 40%;
-            margin-top: 150px;
-            margin-left: 400px;
-            }
+          .group-member-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          }
 
-            .box img {
-            margin-top: 15px;
-            margin-left: 250px;
-            }
+          .group-member-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #777;
+          }
 
-            .heading {
-            text-align: center;
-            margin-right: 25px;
-            padding-top: 10px;
-            }
-            .heading h2{
-            font-size: 28px;
-            }
-            .form h3 {
-            text-align: center;
-            }
-
-            .scl {
-            background-color: #dad5d5;
-            background: #f4f7f4;
-            color: rgb(235, 4, 4);
-            padding: 10px;
-            width: 94%;
-            height: 150px;
-            overflow: scroll;
-            }
-
-            .scl img {
-            margin-top: 10px;
-            margin-left: 20px;
-            }
-
-            .form button {
-            border: none;
-            color: rgb(238, 227, 227);
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
+          .group-member-close {
             cursor: pointer;
-            margin-left: 175px;
-            background-color: #0987db;
-            border-radius: 20px;
-            }
+            color: #777;
+          }
 
-            .form button:hover {
-            background-color: orange;
-            }
+          .group-member-search input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+          }
 
-            form.example input[type=text] {
+          .group-member-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top:30px;
+           
+          }
+
+          .group-member-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+          }
+
+          .group-member-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-left: 10px;
+            color: #777;
+          }
+
+          .group-member-action {
+            margin-left: auto;
+            cursor: pointer;
+            color: #3498db;
+            font-size: 14px;
+          }
+
+          .group-member-button {
+            width: 100%;
             padding: 10px;
-            font-size: 17px;
-            border: 1px solid grey;
-            float: left;
-            width: 80%;
-            background: #f1f1f1;
-            }
-
-            form.example button {
-            float: left;
-        lay: table;
-            }
-          `
-        }
+            margin-top: 10px;
+            border: none;
+            border-radius: 3px;
+            background-color: #3498db;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+          }
+        `}
       </style>
 
-      <div className="Group-member">
-        <img src={img1} alt="Facile" className="nav__logo" id="logo" />
-            <div className="heading">
-                <h2>Add group member</h2>
+      <div className="group-member-popup">
+        <div className="group-member-container">
+          <div className="group-member-header">
+            <div className="group-member-title">Manage Members</div>
+            <div className="group-member-close" onClick={onClose}>
+              Close
             </div>
-            <h3>
-              Name:
-            </h3>
-        <div className="form">
-        <form className="example" action="" style={{ margin: 'auto', maxWidth: '300px' }}>
-          <input type="text" placeholder="Search.." name="search2" />
-        </form>
-        <button className="button button1" style={{ marginTop: '10px' }}>Add a member</button>
-        <div className="scl">
-          <img src={img2} alt="" width="50" height="50" /><br />
-          <img src={img3} alt="" width="50" height="50" /><br />
-          <img src={img2} alt="" width="50" height="50" /><br />
-          <img src={img3} alt="" width="50" height="50" /><br />
-          <img src={img2} alt="" width="50" height="50" /><br />
-          <img src={img3} alt="" width="50" height="50" />
-        </div>
-            <button onClick={Addworker}>Confirm</button>
-            <button onClick={onClose}>Close</button>
-          
+          </div>
+          <div className="group-member-search">
+            <input
+              type="text"
+              placeholder="Search members..."
+              value={searchText}
+              onChange={handleSearchChange}
+            />
+          </div>
+          <div className="group-member-list">
+            {filteredMembers.map(member => (
+              <div className="group-member-item" key={member.id}>
+                <div className="group-member-name">{member.name}</div>
+                {groupMembers.some(groupMember => groupMember.id === member.id) ? (
+                  <div
+                    className="group-member-action"
+                    onClick={() => handleRemoveMember(member)}
+                  >
+                    Remove
+                  </div>
+                ) : (
+                  <div
+                    className="group-member-action"
+                    onClick={() => handleAddMember(member)}
+                  >
+                    Add
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <button className="group-member-button" onClick={onClose}>
+            Done
+          </button>
         </div>
       </div>
-
-       
-        
-    
     </>
   );
 }
 
-export default AddCoworker;
+export default GroupMemberPopup;
