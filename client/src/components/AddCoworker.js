@@ -9,7 +9,7 @@ function AddCoworker({ onClose }) {
   const [err, setErr] = useState(false);
   const [errors, setErrors] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
-
+ const navigate = useNavigate();
   const workSpaceID = localStorage.getItem("workID");
 
   function Addworker(e) {
@@ -43,7 +43,7 @@ function AddCoworker({ onClose }) {
         Promise.all(emailPromises)
           .then((results) => {
             console.log("Emails sent successfully");
-            onClose();
+            navigate('/chatpage')
           })
           .catch((error) => {
             console.log("Error sending emails:", error);

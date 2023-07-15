@@ -22,13 +22,13 @@ function App() {
           <Routes>
             <Route path="/sign" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/land" element={<Landing />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/work" element={<Create_workspace />} />
             <Route path="/coworkersignup" element={<CoworkerSignup />} />
             <Route path="/coworkerlogin" element={<CoworkerLogin />} />
-            <Route path="/chat" element={<Chatpage />} />
+            <Route path="/chatpage" element={<Chatpage />} />
             <Route path="/group" element={<GroupMember />} />
-            <Route path="/" element={<AddMember />} />
+            <Route path="/member" element={<AddMember />} />
           </Routes>
         </BrowserRouter>
       </div>

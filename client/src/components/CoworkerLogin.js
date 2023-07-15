@@ -44,7 +44,7 @@ function CoworkerLogin() {
             setErrors("");
             console.log("helo",res.data.userId)
             localStorage.setItem('email_token', res.data.userId)
-            navigate('/Chatpage');
+            navigate('/chatpage');
           }
      
 

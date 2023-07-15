@@ -58,8 +58,6 @@ function CoworkerSignup() {
   //adding form validation to set errors in input fields and hitting post api to check users have already account or not.
   //after that calling post api to send data in database using axios
   const register = () => {
-    setworkID(localStorage.getItem("workID"));
-    console.log(localStorage.getItem("workID"));
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
     // Axios.post("http://localhost:3006/getEmail", {
     //     email: email,
@@ -95,7 +93,7 @@ function CoworkerSignup() {
         name: name,
         password: password,
         email: email,
-        workspaceIds: workID,
+        workspaceIds: workSpaceID,
         //image:capturedImage
       }).then((response) => {
         console.log(response);
