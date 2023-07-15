@@ -7,6 +7,8 @@ import Create_workspace from "./components/Create_workspace";
 import CoworkerLogin from "./components/CoworkerLogin";
 import CoworkerSignup from "./components/CoworkerSignUp";
 import Chatpage from "./components/Chatpage";
+import GroupMember from "./components/GroupMember";
+import AddMember from "./components/AddMember";
 
 const workspace_Context = createContext();
 
@@ -20,11 +22,13 @@ function App() {
           <Routes>
             <Route path="/sign" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Landing />} />
+            <Route path="/land" element={<Landing />} />
             <Route path="/work" element={<Create_workspace />} />
             <Route path="/coworkersignup" element={<CoworkerSignup />} />
             <Route path="/coworkerlogin" element={<CoworkerLogin />} />
-            <Route path="/Chatpage" element={<Chatpage />} />
+            <Route path="/chat" element={<Chatpage />} />
+            <Route path="/group" element={<GroupMember />} />
+            <Route path="/" element={<AddMember />} />
           </Routes>
         </BrowserRouter>
       </div>
