@@ -1,18 +1,6 @@
 import React,{useEffect} from 'react'
-import img6 from "../images/turn-off.png";
-import img7 from "../images/add-user.png";
-import img8 from "../images/attachment.png";
-import img9 from "../images/microphone.png";
-import img10 from "../images/send.png";
-import img11 from "../images/settings.png";
-import img12 from "../images/search.png";
-import img13 from "../images/add.png";
 
 
-
-// function Chatpage() 
-// {
- 
 function Chatpage() {
     const toggleDropdown1 = () => {
       document.getElementById("Dropdown1").classList.toggle("show");

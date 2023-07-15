@@ -1,26 +1,15 @@
-import react, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import emailjs from "emailjs-com";
 import img1 from "../images/logofecile.png";
 import axios from "axios";
+
 function AddCoworker({ onClose }) {
   const [email, setEmail] = useState("");
   const [err, seterr] = useState(false);
   const [errors, setErrors] = useState("");
-  const navigate = useNavigate();
-
-  function Addworker() {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (email === "") {
-      setErrors("Email is Required");
-      seterr(true);
-    } else if (!regex.test(email)) {
-      seterr(true);
-      setErrors("Invalid Email");
-    } else {
-    }
-  }
-
+const workSpaceID = localStorage.getItem("workID")
+console.log("wegh",workSpaceID)
   function Addworker(e) {
     e.preventDefault();
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
@@ -33,6 +22,7 @@ function AddCoworker({ onClose }) {
     } else {
       const templateParams = {
         email: email,
+        workSpaceID: workSpaceID,
       };
 
       emailjs
@@ -42,7 +32,6 @@ function AddCoworker({ onClose }) {
           templateParams,
           "SshR7dvNO5QUpwqIQ"
         )
-
         .then(
           (result) => {
             console.log("Email sent successfully");
@@ -74,7 +63,7 @@ function AddCoworker({ onClose }) {
 
   return (
     <>
-      <style>
+          <style>
         {
           `
 
@@ -120,36 +109,21 @@ function AddCoworker({ onClose }) {
         }
       </style>
 
-
       <div className="header-coworker">
         <img src={img1} alt="Facile" className="nav__logo" id="logo" />
-          <h2>
-              Invite your co workers
-            </h2>
-            <h3>
-              To:
-            </h3>
+        <h2>Invite your co workers</h2>
+        <h3>To:</h3>
         <input
-              type="email"
-              placeholder="name@email.com"
-              autoComplete="on"
-              onChange={EmailHandler}
-              value={email}
-            />
-            {err ? (
-              <span style={{ color: "rgb(247, 14, 14)" }}>
-                {errors}
-              </span>
-            ) : (
-              ""
-            )}
-            <button onClick={Addworker}>Send Invite</button>
-            <button onClick={onClose}>Close</button>
-          
-        </div>
-       
-        
-    
+          type="email"
+          placeholder="name@email.com"
+          autoComplete="on"
+          onChange={EmailHandler}
+          value={email}
+        />
+        {err && <span style={{ color: "rgb(247, 14, 14)" }}>{errors}</span>}
+        <button onClick={Addworker}>Send Invite</button>
+        <button onClick={onClose}>Close</button>
+      </div>
     </>
   );
 }
