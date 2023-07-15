@@ -26,7 +26,6 @@ function CoworkerLogin() {
       seterr(true);
     }
      else{
-
       axios.post("http://localhost:3000/loginCo-worker", {
         email: email,
         password: password,
@@ -43,7 +42,8 @@ function CoworkerLogin() {
             seterr(false)
             setErrors("");
             console.log("helo",res.data.userId)
-            localStorage.setItem('email_token', res.data.userId)
+            //localStorage.setItem('email_token', res.data.userId)
+            localStorage.removeItem("email_token");
             navigate('/chatpage');
           }
      

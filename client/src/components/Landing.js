@@ -528,11 +528,7 @@ h4 {
                   Workspaces
                 </a>
               </li>
-              <li className="nav__item">
-                <a className="btn" href="/sign">
-                  Signup
-                </a>
-              </li>
+             
               {check === "" ? (
                 <>
                   <li className="nav__item">

@@ -244,8 +244,7 @@ body {
           <button onClick={onClose}>Close</button>
          
         </div>
-       
-        
+   
       </div>
     </>
   );

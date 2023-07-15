@@ -467,3 +467,24 @@ const port = 3000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+
+
+
+
+
+//Get All CO-workers
+app.get("/Get_CoWorkers", (req, res) => {
+  console.log("im a server")
+  pool.query(`SELECT * FROM co_workers`, (err, result) => {
+      res.send(result);
+
+  })
+})
+//Get All Channels
+app.get("/Get_Channels", (req, res) => {
+  console.log("im a server")
+  pool.query(`SELECT * FROM channel`, (err, result) => {
+      res.send(result);
+
+  })
+})

@@ -97,7 +97,7 @@ function CoworkerSignup() {
         //image:capturedImage
       }).then((response) => {
         console.log(response);
-
+        localStorage.removeItem("email_token");
         setShowCoLoginPopup(true);
       });
     }
