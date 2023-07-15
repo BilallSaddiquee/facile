@@ -26,9 +26,9 @@ function App() {
             <Route path="/work" element={<Create_workspace />} />
             <Route path="/coworkersignup" element={<CoworkerSignup />} />
             <Route path="/coworkerlogin" element={<CoworkerLogin />} />
-            <Route path="/chat" element={<Chatpage />} />
+            <Route path="/" element={<Chatpage />} />
             <Route path="/group" element={<GroupMember />} />
-            <Route path="/" element={<AddMember />} />
+            <Route path="/AddMember" element={<AddMember />} />
           </Routes>
         </BrowserRouter>
       </div>
