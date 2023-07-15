@@ -1,6 +1,7 @@
 import React,{useEffect} from 'react'
 
 
+
 function Chatpage() {
     const toggleDropdown1 = () => {
       document.getElementById("Dropdown1").classList.toggle("show");
@@ -333,10 +334,10 @@ function Chatpage() {
           <div className="workspace">Workspace</div>
           <div className="box" style={{ backgroundColor: "black" }}><a href=""></a></div>
           <div className="adduser">
-            <a><img src={img7} alt="adduser" /></a>
+            <a><img src="" alt="adduser" /></a>
           </div>
           <div>
-            <button className="logout-button"><img src={img6} alt="" /></button>
+            <button className="logout-button"><img src="" alt="" /></button>
           </div>
         </div>
 
@@ -352,7 +353,7 @@ function Chatpage() {
             <div className="channels">
               <button className="dropbtn" onClick={toggleDropdown1}>&#9660;</button>
               <strong>Channels</strong>
-              <a className='a'><img src={img13} alt="" /></a>
+              <a className='a'><img src="" alt="" /></a>
             </div>
             <div id="Dropdown1" className="dropdown-content">
               <a href="#">Link 1</a>
@@ -365,7 +366,7 @@ function Chatpage() {
             <div className="channels">
               <button className="dropbtn" onClick={toggleDropdown2}>&#9660;</button>
               <div className='direct'><strong>Direct Messages</strong></div>
-              <a className='a'><img src={img13} alt="" /></a>
+              <a className='a'><img src="" alt="" /></a>
             </div>
             <div id="Dropdown2" className="dropdown-content">
               <a href="#">Link 1</a>
@@ -382,17 +383,17 @@ function Chatpage() {
               <div className="search-bar">
                 <input type="text" placeholder="Search..." />
                 <div className='search'>
-                <button className="search-button"><img src={img12} alt="" /></button>
+                <button className="search-button"><img src="" alt="" /></button>
                 </div>
               </div>
-              <a className= 'settings-button'><img src={img11} alt="" /></a>
+              <a className= 'settings-button'><img src="" alt="" /></a>
             </div>
             <div className="messages">
               {/* Chat messages go here */}
             </div>
             <div className="message-input">
               <input type="text" placeholder="Type your message..." />
-              <a className='send-button'><img src={img10} alt="" /></a>
+              <a className='send-button'><img src="" alt="" /></a>
             </div>
             <div className="action-bar">
               <button><i className="fas fa-file"></i></button>
