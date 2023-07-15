@@ -22,8 +22,15 @@ function Chatpage({ onClose }) {
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [selectedDirectMessage, setSelectedDirectMessage] = useState(null);
   const [showAddButton, setShowAddButton] = useState(false);
+  const [workspaceName, setWorkspaceName] = useState('');
+  const workspace_id = localStorage.getItem("workIDss");
+  const adminuser = localStorage.getItem('email_token');
 
   useEffect(() => {
+    fetchData();
+  }, [workspace_id]);
+
+  const fetchData = () => {
     // Fetch channels data from the database using Axios
     axios.get('http://localhost:3000/Get_Channels')
       .then(response => {
@@ -41,7 +48,17 @@ function Chatpage({ onClose }) {
       .catch(error => {
         console.error('Error fetching coworkers:', error);
       });
-  }, []);
+
+    // Fetch workspace name from the database based on the workspace ID
+    axios.get(`http://localhost:3000/Get_Workspace/${workspace_id}`)
+      .then(response => {
+        const workspaceName = response.data.rows[0].name;
+        setWorkspaceName(workspaceName);
+      })
+      .catch(error => {
+        console.error('Error fetching workspace name:', error);
+      });
+  };
 
   const addCoworkerPopup = () => {
     setAddPopup(true);
@@ -71,8 +88,7 @@ function Chatpage({ onClose }) {
     setSelectedChannel(channel);
     setSelectedDirectMessage(null);
     setShowAddButton(true);
-    localStorage.setItem("ChannelID",channel.id)
-   
+    localStorage.setItem("ChannelID", channel.id);
   };
 
   const handleDirectMessageClick = (directMessage) => {
@@ -81,9 +97,31 @@ function Chatpage({ onClose }) {
     setShowAddButton(false);
   };
 
+  const handleRemoveDirectMessage = (coworkerId) => {
+    axios.delete(`http://localhost:3000/Remove_Coworker/${coworkerId}`)
+      .then(response => {
+        console.log('Direct message coworker removed successfully');
+        fetchData(); // Fetch updated data after removal
+      })
+      .catch(error => {
+        console.error('Error removing direct message coworker:', error);
+      });
+  };
+
+  const handleCreateGroup = (newGroupData) => {
+    axios.post('http://localhost:3000/Create_Group', newGroupData)
+      .then(response => {
+        console.log('Group created successfully');
+        fetchData(); // Fetch updated data after creation
+      })
+      .catch(error => {
+        console.error('Error creating group:', error);
+      });
+  };
+
   return (
     <>
-        <style>
+                  <style>
    
    {`
    * {
@@ -299,58 +337,67 @@ function Chatpage({ onClose }) {
 }
 
 .channel-list {
- max-height: 200px;
- overflow-y: auto;
-}
+            max-height: 200px;
+            overflow-y: auto;
+          }
 
-.coworker-list {
- max-height: 200px;
- overflow-y: auto;
- cursor: pointer;
-}
+          .coworker-list {
+            max-height: 200px;
+            overflow-y: auto;
+            cursor: pointer;
+          }
 
-.channel-list li,
-.coworker-list li {
- padding: 5px;
- cursor: pointer;
- cursor: pointer;
-}
+          .channel-list li,
+          .coworker-list li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+            cursor: pointer;
+          }
 
-.channel-list li.selected,
-.coworker-list li.selected {
- background-color: #3498db;
- color: #fff;
- cursor: pointer;
-}
+          .channel-list li.selected,
+          .coworker-list li.selected {
+            background-color: #3498db;
+            color: #fff;
+          }
 
-     .add-member-button {
-       margin-left: 10px;
-       padding: 5px;
-       background-color: #edf2f4;
-       color: '#fff';
-   
-       font-size: 20px;
-       cursor: pointer;
-     }
+          .add-member-button {
+            margin-left: 10px;
+            padding: 5px;
+            background-color: #edf2f4;
+            color: '#fff';
+            font-size: 20px;
+            cursor: pointer;
+          }
+
+          .group-member-action {
+            margin-left: auto;
+            cursor: pointer;
+            color: #3498db;
+            font-size: 14px;
+          }
    `}
  </style>
-
       <div className="chatpage">
         <div className="left-section">
-          <div className="workspace">Workspace</div>
-          <div className="box" style={{ backgroundColor: "black" }}></div>
-          <div className="adduser">
-            <button className="adduser-button" onClick={addCoworkerPopup}>
-              <img src={img1} alt="adduser" />
-            </button>
-            {addCoworker && (
-              <div className="popup-container">
-                <div className="popup">
-                  <AddCoworker onClose={closeCoworkerPopup} />
+          <div className="workspace">{workspaceName}</div>
+          {adminuser === null ? (
+            <></>
+          ) : (
+            <div className="adduser">
+              <button className="adduser-button" onClick={addCoworkerPopup}>
+                <img src={img1} alt="adduser" />
+              </button>
+              {addCoworker && (
+                <div className="popup-container">
+                  <div className="popup">
+                    <AddCoworker onClose={closeCoworkerPopup} />
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
           <div>
             <button className="logout-button">
               <img src={img2} alt="" />
@@ -366,7 +413,7 @@ function Chatpage({ onClose }) {
               {createGroupPG && (
                 <div className="popup-container">
                   <div className="popup">
-                    <CreateChannel onClose={closeGroup} />
+                    <CreateChannel onClose={closeGroup} onCreateGroup={handleCreateGroup} />
                   </div>
                 </div>
               )}
@@ -400,6 +447,11 @@ function Chatpage({ onClose }) {
                 className={selectedDirectMessage === coworker ? 'selected' : ''}
               >
                 {coworker.name}
+                {adminuser !== null && (
+                  <div className="group-member-action" onClick={() => handleRemoveDirectMessage(coworker.id)}>
+                    Remove
+                  </div>
+                )}
               </li>
             ))}
           </ul>

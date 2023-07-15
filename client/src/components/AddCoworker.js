@@ -43,6 +43,7 @@ function AddCoworker({ onClose }) {
         Promise.all(emailPromises)
           .then((results) => {
             console.log("Emails sent successfully");
+           
             navigate('/chatpage')
           })
           .catch((error) => {

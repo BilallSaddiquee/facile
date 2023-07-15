@@ -10,28 +10,28 @@ import Axios from "axios";
 import CoworkerLogin from "./CoworkerLogin";
 
 function CoworkerSignup() {
-
- 
- 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const workSpaceID = queryParams.get("id");
   const getemail = queryParams.get("email");
   console.log(workSpaceID);
 
-  useEffect(() => {
-    console.log("workSpaceID:", workSpaceID);
-  }, [workSpaceID]);
+
 
   const [openModal, setOpenModal] = useState(false);
   const [showCoLoginPopup, setShowCoLoginPopup] = useState(false);
   const [workID, setworkID] = useState("");
   const handleCoworkerLoginClick = () => {
     setShowCoLoginPopup(true);
+  
+    localStorage.setItem("email_token","");
+    localStorage.setItem("workIDss",workSpaceID);
   };
 
   useEffect(() => {
-    setworkID(localStorage.getItem("workID"));
+    localStorage.setItem("workIDss",workSpaceID);
+    
+    localStorage.setItem("email_token","");
   }, []);
 
   const navigate = useNavigate();
@@ -97,7 +97,8 @@ function CoworkerSignup() {
         //image:capturedImage
       }).then((response) => {
         console.log(response);
-        localStorage.removeItem("email_token");
+        localStorage.setItem("email_token","");
+        localStorage.setItem("workIDss",workSpaceID);
         setShowCoLoginPopup(true);
       });
     }

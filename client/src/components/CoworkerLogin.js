@@ -10,7 +10,8 @@ function CoworkerLogin() {
   const [password, setPass] = useState("");
   const [err, seterr] = useState(false);
  const[errors,setErrors]=useState("");
-
+console.log("login",localStorage.getItem("workID"))
+console.log("login2",localStorage.getItem("workIDss"))
   const navigate=useNavigate();
   function CoworkerLogin() {
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");

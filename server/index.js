@@ -309,9 +309,9 @@ app.post("/loginCo-worker", async (req, res) => {
 
 
 // Endpoint to remove a co-worker
-app.delete('/co-workers/:id', async (req, res) => {
+app.delete('/Remove_Coworker/:coworkerId', async (req, res) => {
   try {
-    const coWorkerId = req.params.id;
+    const coWorkerId = req.params.coworkerId;
 
     // Delete the co-worker's data from the "co_worker_workspace" table
     const deleteWorkspaceQuery = 'DELETE FROM co_worker_workspace WHERE co_worker_id = $1';
@@ -442,6 +442,16 @@ app.get('/Get_GroupMembers/:groupId', (req, res) => {
 })
 });
 
+
+//get work space
+app.get('/Get_Workspace/:workspace_id', (req, res) => {
+  const groupId = req.params.workspace_id;
+  console.log("id", groupId)
+  pool.query(`select * from workspace where id=${groupId}`, (err, result) => {
+    res.send(result);
+
+})
+});
 // Endpoint to add a new co-worker to channel
 app.post('/Add_Member/:coworkerID/:groupId', async (req, res) => {
   try {
