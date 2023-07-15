@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
 import img1 from "../images/add-user.png";
 import img2 from "../images/turn-off.png";
 import img3 from "../images/plus.png";
@@ -7,40 +7,28 @@ import img5 from "../images/send.png";
 import img6 from "../images/zoom.png";
 import img7 from "../images/microphone.png";
 import img8 from "../images/attachment.png";
+import img9 from "../images/search.png";
+
 
 
 function Chatpage() {
-    const toggleDropdown1 = () => {
-      document.getElementById("Dropdown1").classList.toggle("show");
+
+    const [channelsOpen, setChannelsOpen] = useState(false);
+    const [directMessagesOpen, setDirectMessagesOpen] = useState(false);
+
+    const toggleChannels = () => {
+        setChannelsOpen(!channelsOpen);
     };
-  
-    const toggleDropdown2 = () => {
-      document.getElementById("Dropdown2").classList.toggle("show");
+
+    const toggleDirectMessages = () => {
+        setDirectMessagesOpen(!directMessagesOpen);
     };
-  
-    const handleClickOutside = (event) => {
-      if (!event.target.matches('.dropbtn')) {
-        const dropdowns = document.getElementsByClassName("dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-          const openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    };
-  
-    useEffect(() => {
-      document.addEventListener('click', handleClickOutside);
-  
-      return () => {
-        document.removeEventListener('click', handleClickOutside);
-      };
-    }, []);
-  return (
-    <>
-    <style>
-        {`
+
+    return (
+        <>
+
+            <style>
+                {`
             * {
                 margin: 0;
                 padding: 0;
@@ -54,7 +42,7 @@ function Chatpage() {
             .left-section {
                 width: 7%;
                 height: 100vh;
-                background-color: #ff9E4F;
+                background-color: #4d394b;
                 display: flex;
                 flex-direction: column;
                 /* justify-content: space-between; */
@@ -93,10 +81,6 @@ function Chatpage() {
                 height: 10px;
             }
             
-            
-            
-            
-            
             /* .logout-button {
                 /* padding: 7px; */
                 /* background-color: rgb(240, 239, 239); 
@@ -107,6 +91,7 @@ function Chatpage() {
                 height: 25px;
                 cursor:pointer;
             }
+            
             
             .logout-button{
                 justify-content: flex-end;
@@ -129,95 +114,11 @@ function Chatpage() {
                 flex-direction: column;
             }
             
-            .username{
-                display: flex;
-            }
-            .username .button{
-                width: 25px;
-                border: none;
-                margin: 10px;
-            }
-            
-            .plus{
-                padding: 2px;
-                margin-left: 20px;
-            }
-            
-            
-            .channels .direct {
-                margin: 10px;
-                // display: flex;
-            }
-            
-            .dropbtn {
-                /* background-color: #3498DB; */
-                color: black;
-                padding: 16px;
-                font-size: 16px;
-                border: none;
-                cursor: pointer;
-            }
-            .a img{
-                width:25px;
-                height:25px;
-                padding: 2px;
-                margin-left: 20px;
-            }
-            
-            
-            /* Dropdown button on hover & focus */
-            /* .dropbtn:hover, .dropbtn:focus {
-                background-color: #2980B9;
-              } */
-            
-            /* The container <div> - needed to position the dropdown content */
-            .dropdown {
-                position: relative;
-                display: inline-block;
-                margin-bottom: 180px;
-            }
-            
-            /* Dropdown Content (Hidden by Default) */
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                min-width: 160px;
-                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-                z-index: 1;
-            }
-            
-            /* Links inside the dropdown */
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
-            
-            /* Change color of dropdown links on hover */
-            .dropdown-content a:hover {
-                background-color: #ddd;
-            }
-            
-            /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-            .show {
-                display: block;
-            }
-            
-            .dropdown-button {
-                margin-top: 10px;
-                padding: 5px 10px;
-                background-color: lightgray;
-                cursor: pointer;
-            }
-            
-            
             /* Right section with 70% width */
             .right-section {
                 width: 70%;
                 height: 100vh;
-                /* background-color: #f2f2f2; */
+                background-color: rgba(255,255,255,255);
                 /* padding: 10px; */
             }
             
@@ -231,7 +132,8 @@ function Chatpage() {
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                background-color: #2980B9;
+                background-color: rgba(77,57,75,255);
+                color:white;
               }
               
               .username {
@@ -318,100 +220,157 @@ function Chatpage() {
                 background-color: #f2f2f2;
               }
               
-              .action-bar button {
-                width: 25px;
-                padding: 5px;
-                border: none;
-                font-size: 20px;
-                background-color: none;
-                border: none;
-                outline: none;
-                cursor: pointer;
-                margin-right: 20px;
+              .action-bar{
+                display:flex;
+              }          
+              .icon a img{
+                width:25px;
+                height:25px;
+                margin-left:30px;
               }
-            
-              .action-bar button i{
+
+              .middle-section{
+                background-color:#ffffff;
+              }
+
+              .channels {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+              }
+              .username1{
+                font-size:30px;
+              }
+
+              .username{
+                color:white;
+                font-size:20px;
+              }
+              
+              .dropdown-btn {
+                padding: 5px 10px;
+                font-size: 18px;
                 border: none;
                 background: none;
-              }           
+                cursor: pointer;
+                margin-right: 5px;
+                transition: transform 0.3s ease;
+              }
+              
+              .channels-text {
+                font-size: 18px;
+                font-weight: bold;
+              }
+              
+              .channel-list {
+                list-style-type: none;
+                padding: 0;
+                margin: 10px 0;
+                transition: max-height 0.3s ease, opacity 0.3s ease;
+              }
+              
+              .channel-list li {
+                padding: 5px;
+              }
+              .channels-open .channel-list{
+                max-height: 200px; /* Adjust the value based on your needs */
+              }
+              
+              .add-btn {
+                font-size: 24px;
+                padding: 5px 10px;
+                border: none;
+                background: none;
+                cursor: pointer;
+              }
         `}
-    </style>
-    <div className="chatpage">
-        <div className="left-section">
-          <div className="workspace">Workspace</div>
-          <div className="box" style={{ backgroundColor: "black" }}><a href=""></a></div>
-          <div className="adduser">
-            <a><img src={img7} alt="adduser" /></a>
-          </div>
-          <div>
-            <button className="logout-button"><img src={img6} alt="" /></button>
-          </div>
-        </div>
-
-        <div className="middle-section">
-          <div className="username1">
-            <div className="user">
-              <h1>Username</h1>
-            </div>
-            <div className="button"><button onClick={toggleDropdown1}>&#9660;</button></div>
-          </div>
-          <hr />
-          <div className="dropdown">
-            <div className="channels">
-              <button className="dropbtn" onClick={toggleDropdown1}>&#9660;</button>
-              <strong>Channels</strong>
-              <a className='a'><img src="" alt="" /></a>
-            </div>
-            <div id="Dropdown1" className="dropdown-content">
-              <a href="#">Link 1</a>
-              <a href="#">Link 2</a>
-              <a href="#">Link 3</a>
-            </div>
-          </div>
-
-          <div className="dropdown">
-            <div className="channels">
-              <button className="dropbtn" onClick={toggleDropdown2}>&#9660;</button>
-              <div className='direct'><strong>Direct Messages</strong></div>
-              <a className='a'><img src="" alt="" /></a>
-            </div>
-            <div id="Dropdown2" className="dropdown-content">
-              <a href="#">Link 1</a>
-              <a href="#">Link 2</a>
-              <a href="#">Link 3</a>
-            </div>
-          </div>
-        </div>
-
-        <div className="right-section">
-          <div className="chat-section">
-            <div className="navbar">
-              <div className="username">John Doe</div>
-              <div className="search-bar">
-                <input type="text" placeholder="Search..." />
-                <div className='search'>
-                <button className="search-button"><img src="" alt="" /></button>
+            </style>
+            <div className="chatpage">
+                <div className="left-section">
+                    <div className="workspace">Workspace</div>
+                    <div className="box" style={{ backgroundColor: "black" }}><a href=""></a></div>
+                    <div className="adduser">
+                        <a href=''><img src={img1} alt="adduser" /></a>
+                    </div>
+                    <div>
+                        <button className='logout-button'><img src={img2} alt="" /></button>
+                    </div>
                 </div>
-              </div>
-              <a className= 'settings-button'><img src="" alt="" /></a>
-            </div>
-            <div className="messages">
-              {/* Chat messages go here */}
-            </div>
-            <div className="message-input">
-              <input type="text" placeholder="Type your message..." />
-              <a className='send-button'><img src="" alt="" /></a>
-            </div>
-            <div className="action-bar">
-              <button><i className="fas fa-file"></i></button>
-              <button><i className="fas fa-video"></i></button>
-              <button><i className="fas fa-microphone"></i></button>
-            </div>
-          </div>
-        </div>
-      </div>
-      </>
-  )
+
+                <div className="middle-section">
+                    <div className='username1'><strong>Username</strong></div>
+                    <br />
+                    <hr />
+                    <br />
+                    <div className="channels">
+                        <button className="dropdown-btn" onClick={toggleChannels}>
+                            {channelsOpen ? <>&#9660;</> : <>&#9654;</>}
+                        </button>
+                        <span className="channels-text">Channels</span><spam><button className="add-btn">+</button></spam>
+                    </div>
+                    {channelsOpen && (
+                        <ul className="channel-list">
+                            {/* List of channels */}
+                            <li>Channel 1</li>
+                            <li>Channel 2</li>
+                            <li>Channel 3</li>
+                        </ul>
+                    )}
+
+                    {/* Direct Messages */}
+                    <div className={`direct-messages ${directMessagesOpen ? 'open' : ''}`}>
+                        <button className="dropdown-btn" onClick={toggleDirectMessages}>
+                            {directMessagesOpen ? <>&#9660;</> : <>&#9654;</>}
+                        </button>
+                        <span className="channels-text">Direct Messages</span><span><button className="add-btn">+</button></span>
+                    </div>
+                    {directMessagesOpen && (
+                        <ul className="channel-list">
+                            {/* List of direct messages */}
+                            <li>Direct Message 1</li>
+                            <li>Direct Message 2</li>
+                            <li>Direct Message 3</li>
+                        </ul>
+                    )}
+
+                    
+
+
+
+
+                </div>
+
+
+
+                <div className="right-section">
+                    <div className="chat-section">
+                        <div className="navbar">
+                            <div className="username">John Doe</div>
+                            <div className="search-bar">
+                                <input type="text" placeholder="Search..." />
+                                <div className='search'>
+                                    <button className="search-button"><img src={img9} alt="" /></button>
+                                </div>
+                            </div>
+                            <a href='' className='settings-button'><img src={img4} alt="" /></a>
+                        </div>
+                        <div className="messages">
+                            {/* Chat messages go here */}
+                        </div>
+                        <div className="message-input">
+                            <input type="text" placeholder="Type your message..." />
+                            <a href="" className='send-button'><img src={img5} alt="" /></a>
+                        </div>
+                        <div className="action-bar">
+                            <div className='icon'><a href=''><img src={img8} alt='' /></a></div>
+                            <div className='icon'><a href=''><img src={img7} alt='' /></a></div>
+                            <div className='icon'><a href=''><img src={img6} alt='' /></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div >
+        </>
+    );
 }
 
 

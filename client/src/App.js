@@ -29,6 +29,9 @@ function App() {
             <Route path="/chatpage" element={<Chatpage />} />
             <Route path="/group" element={<GroupMember />} />
             <Route path="/member" element={<AddMember />} />
+            <Route path="/" element={<Chatpage />} />
+            <Route path="/group" element={<GroupMember />} />
+            <Route path="/AddMember" element={<AddMember />} />
           </Routes>
         </BrowserRouter>
       </div>
