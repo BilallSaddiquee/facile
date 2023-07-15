@@ -1,4 +1,12 @@
 import React,{useEffect} from 'react'
+import img1 from "../images/add-user.png";
+import img2 from "../images/turn-off.png";
+import img3 from "../images/plus.png";
+import img4 from "../images/settings.png";
+import img5 from "../images/send.png";
+import img6 from "../images/zoom.png";
+import img7 from "../images/microphone.png";
+import img8 from "../images/attachment.png";
 
 
 function Chatpage() {
@@ -46,17 +54,18 @@ function Chatpage() {
             .left-section {
                 width: 7%;
                 height: 100vh;
-                background-color: #f2f2f2;
+                background-color: #ff9E4F;
                 display: flex;
                 flex-direction: column;
                 /* justify-content: space-between; */
                 text-align: center;
                 padding: 10px;
+                color:white;
             }
             .workspace{
                 margin-top: 10px;
                 font-weight: bold;
-                font-size: 17px;
+                font-size: 14px;
                 margin-bottom: 20px;
             }
             
@@ -79,6 +88,10 @@ function Chatpage() {
             .left-section button{
                 border: none;
             }
+            .plus img{
+                width: 10px;
+                height: 10px;
+            }
             
             
             
@@ -100,8 +113,8 @@ function Chatpage() {
                 margin-top: 27rem;
             }
             .logout-button img{
-                width: 25px;
-                height: 25px;
+                width: 30px;
+                height: 30px;
                 cursor: pointer;
             }
             
@@ -120,6 +133,7 @@ function Chatpage() {
                 display: flex;
             }
             .username .button{
+                width: 25px;
                 border: none;
                 margin: 10px;
             }
@@ -130,8 +144,9 @@ function Chatpage() {
             }
             
             
-            .channels {
-                display: flex;
+            .channels .direct {
+                margin: 10px;
+                // display: flex;
             }
             
             .dropbtn {
@@ -142,6 +157,13 @@ function Chatpage() {
                 border: none;
                 cursor: pointer;
             }
+            .a img{
+                width:25px;
+                height:25px;
+                padding: 2px;
+                margin-left: 20px;
+            }
+            
             
             /* Dropdown button on hover & focus */
             /* .dropbtn:hover, .dropbtn:focus {
@@ -152,7 +174,7 @@ function Chatpage() {
             .dropdown {
                 position: relative;
                 display: inline-block;
-                margin-bottom: 200px;
+                margin-bottom: 180px;
             }
             
             /* Dropdown Content (Hidden by Default) */
@@ -190,6 +212,7 @@ function Chatpage() {
                 cursor: pointer;
             }
             
+            
             /* Right section with 70% width */
             .right-section {
                 width: 70%;
@@ -214,6 +237,7 @@ function Chatpage() {
               .username {
                 font-weight: bold;
                 margin-right: auto;
+                color:white;
               }
               
               .search-bar {
@@ -221,30 +245,40 @@ function Chatpage() {
                 align-items: center;
                 margin-right: 10px;
               }
+              .search-button img{
+                width: 25px;
+                paddingTop: 2px;
+                // background-color: #2980B9;
+                font-size: 22px;
+                // border: none;
+                outline: none;
+                cursor: pointer;
+
+              }
               
               .search-bar input[type="text"] {
                 padding: 5px;
               }
               
               .search-button {
-                padding: 6px;
+                // padding: 6px;
                 background-color: #f3f0f0;
                 border: none;
                 outline: none;
                 cursor: pointer;
               }
               
-              .settings-button {
-                padding: 7px;
+              .settings-button img{
+                // padding: 7px;
+                width: 22px;
                 background-color: none;
                 background: none;
                 border: none;
                 outline: none;
                 cursor: pointer;
+                font-size:20px;
               }
-              .settings-button i {
-                font-size: 25px; /* Set the desired size */
-              }
+              
               
               .messages {
                 flex-grow: 1;
@@ -257,7 +291,7 @@ function Chatpage() {
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                background-color: #f2f2f2;
+                backgroundColor: #20980B9;
               }
               
               .message-input input[type="text"] {
@@ -265,11 +299,13 @@ function Chatpage() {
                 padding: 5px;
               }
               
-              .send-button {
-                padding: 7px;
-                background-color: #2980B9;
-                font-size: 14px;
-                border: none;
+              .send-button img{
+
+                width: 25px;
+                paddingTop: 2px;
+                // background-color: #2980B9;
+                font-size: 22px;
+                // border: none;
                 outline: none;
                 cursor: pointer;
               }
@@ -283,6 +319,7 @@ function Chatpage() {
               }
               
               .action-bar button {
+                width: 25px;
                 padding: 5px;
                 border: none;
                 font-size: 20px;
@@ -304,15 +341,15 @@ function Chatpage() {
           <div className="workspace">Workspace</div>
           <div className="box" style={{ backgroundColor: "black" }}><a href=""></a></div>
           <div className="adduser">
-            <button><img src="add-user.png" alt="adduser" /></button>
+            <a><img src={img7} alt="adduser" /></a>
           </div>
           <div>
-            <button className="logout-button"><img src="poweroff.png" alt="" /></button>
+            <button className="logout-button"><img src={img6} alt="" /></button>
           </div>
         </div>
 
         <div className="middle-section">
-          <div className="username">
+          <div className="username1">
             <div className="user">
               <h1>Username</h1>
             </div>
@@ -323,7 +360,7 @@ function Chatpage() {
             <div className="channels">
               <button className="dropbtn" onClick={toggleDropdown1}>&#9660;</button>
               <strong>Channels</strong>
-              <button className="plus">&plus;</button>
+              <a className='a'><img src="" alt="" /></a>
             </div>
             <div id="Dropdown1" className="dropdown-content">
               <a href="#">Link 1</a>
@@ -335,8 +372,8 @@ function Chatpage() {
           <div className="dropdown">
             <div className="channels">
               <button className="dropbtn" onClick={toggleDropdown2}>&#9660;</button>
-              <strong>Direct Messages</strong>
-              <button className="plus">&plus;</button>
+              <div className='direct'><strong>Direct Messages</strong></div>
+              <a className='a'><img src="" alt="" /></a>
             </div>
             <div id="Dropdown2" className="dropdown-content">
               <a href="#">Link 1</a>
@@ -352,16 +389,18 @@ function Chatpage() {
               <div className="username">John Doe</div>
               <div className="search-bar">
                 <input type="text" placeholder="Search..." />
-                <button className="search-button"><i className="fas fa-search"></i></button>
+                <div className='search'>
+                <button className="search-button"><img src="" alt="" /></button>
+                </div>
               </div>
-              <button className="settings-button"><i className="fas fa-cog"></i></button>
+              <a className= 'settings-button'><img src="" alt="" /></a>
             </div>
             <div className="messages">
               {/* Chat messages go here */}
             </div>
             <div className="message-input">
               <input type="text" placeholder="Type your message..." />
-              <button className="send-button"><i className="fas fa-paper-plane"></i></button>
+              <a className='send-button'><img src="" alt="" /></a>
             </div>
             <div className="action-bar">
               <button><i className="fas fa-file"></i></button>

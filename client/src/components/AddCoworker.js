@@ -5,124 +5,154 @@ import img1 from "../images/logofecile.png";
 import axios from "axios";
 
 function AddCoworker({ onClose }) {
-  const [email, setEmail] = useState("");
-  const [err, seterr] = useState(false);
+  const [emails, setEmails] = useState("");
+  const [err, setErr] = useState(false);
   const [errors, setErrors] = useState("");
-const workSpaceID = localStorage.getItem("workID")
-console.log("wegh",workSpaceID)
+  const [inputFocused, setInputFocused] = useState(false);
+
+  const workSpaceID = localStorage.getItem("workID");
+
   function Addworker(e) {
     e.preventDefault();
     let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (email === "") {
-      setErrors("Email is Required");
-      seterr(true);
-    } else if (!regex.test(email)) {
-      seterr(true);
-      setErrors("Invalid Email");
+    if (emails === "") {
+      setErrors("Emails are required");
+      setErr(true);
     } else {
-      const templateParams = {
-        email: email,
-        workSpaceID: workSpaceID,
-      };
+      const emailList = emails.split(",").map((email) => email.trim());
+      const invalidEmails = emailList.filter((email) => !regex.test(email));
 
-      emailjs
-        .send(
-          "service_gnxkngh",
-          "template_6k27c9p",
-          templateParams,
-          "SshR7dvNO5QUpwqIQ"
-        )
-        .then(
-          (result) => {
-            console.log("Email sent successfully");
+      if (invalidEmails.length > 0) {
+        setErrors("Invalid Email(s): " + invalidEmails.join(", "));
+        setErr(true);
+      } else {
+        const emailPromises = emailList.map((email) => {
+          const templateParams = {
+            email: email,
+            workSpaceID: workSpaceID,
+          };
+
+          return emailjs.send(
+            "service_gnxkngh",
+            "template_6k27c9p",
+            templateParams,
+            "SshR7dvNO5QUpwqIQ"
+          );
+        });
+
+        Promise.all(emailPromises)
+          .then((results) => {
+            console.log("Emails sent successfully");
             onClose();
-          },
-          (error) => {
-            console.log("Error sending email:", error.text);
-          }
-        );
-
-      setEmail("");
+          })
+          .catch((error) => {
+            console.log("Error sending emails:", error);
+          });
+      }
     }
   }
 
-  const EmailHandler = (e) => {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-
-    setEmail(e.target.value);
+  const EmailsHandler = (e) => {
+    setEmails(e.target.value);
     if (e.target.value === "") {
-      seterr(true);
-      setErrors("Email is Required");
-    } else if (!regex.test(e.target.value)) {
-      seterr(true);
-      setErrors("Invalid Email");
+      setErr(true);
+      setErrors("Emails are required");
     } else {
-      seterr(false);
+      setErr(false);
     }
+  };
+
+  const handleInputFocus = () => {
+    setInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    setInputFocused(false);
   };
 
   return (
     <>
-          <style>
-        {
-          `
+      <style>
+        {`
+          .header-coworker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 2rem;
+          }
 
-          img {
+          .header-coworker img {
             margin: 10px;
           }
 
-          h2 {
-            paddingTop: 10px;
+          .header-coworker h2 {
+            padding-top: 10px;
             font-size: 3rem;
             line-height: 1;
             display: flex;
-            marginLeft: 10px;
-            }
-
-          span{
-            margin: 10px;
+            margin-left: 10px;
           }
 
+          .header-coworker span {
+            margin: 10px;
+            color: rgb(247, 14, 14);
+          }
 
-          header-coworker button{
-            grid-column: 1 / span 2;
-            justify-self: center;
+          .header-coworker input.coworkerInput {
+            font-size: 1.7rem;
+            padding: 10px;
+            width: 100%;
+            margin: 4px;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+          }
+
+          .btnCoworker {
+            display: flex;
+            justify-content: center;
             margin-top: 1rem;
           }
-          button {
+
+          .btnCoworker button {
             font-size: 1.7rem;
             padding: 8px;
             margin: 3px;
             border: 1px solid #ddd;
             border-radius: 0.5rem;
-            }
-          
-          input {
-              font-size: 1.7rem;
-              padding: 10px;
-              width: 100%;
-              margin: 4px;
-              border: 1px solid #ddd;
-              border-radius: 0.5rem;
-            }
-          `
-        }
+          }
+
+          .btnCoworker button.small {
+            padding: 6px;
+            font-size: 1.5rem;
+          }
+
+          .btnCoworker button.large {
+            padding: 10px;
+            font-size: 2rem;
+          }
+        `}
       </style>
 
       <div className="header-coworker">
         <img src={img1} alt="Facile" className="nav__logo" id="logo" />
-        <h2>Invite your co workers</h2>
+        <h2>Invite your co-workers</h2>
         <h3>To:</h3>
         <input
-          type="email"
-          placeholder="name@email.com"
+          type="text"
+          className="coworkerInput"
+          placeholder="Enter email addresses separated by commas"
           autoComplete="on"
-          onChange={EmailHandler}
-          value={email}
+          onChange={EmailsHandler}
+          value={emails}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
         />
-        {err && <span style={{ color: "rgb(247, 14, 14)" }}>{errors}</span>}
-        <button onClick={Addworker}>Send Invite</button>
-        <button onClick={onClose}>Close</button>
+        {err && <span>{errors}</span>}
+        <div className={`btnCoworker ${inputFocused ? "large" : "small"}`}>
+          <button onClick={Addworker}>Send Invites</button>
+          <button onClick={onClose}>Close</button>
+        </div>
       </div>
     </>
   );
