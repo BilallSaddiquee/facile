@@ -8,22 +8,78 @@ const { MongoClient } = require('mongodb');
 const mongoUrl = 'mongodb://127.0.0.1:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
-const http = require('http');
-
-const socketIO = require('socket.io');
-
-
-const server = http.createServer(app);
-
-const io = socketIO(server);
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// Start the server
+const port = 3000;
+const server = app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
+});
+
+//const http = require('http');
+const socket = require("socket.io");
+const { log } = require('console');
+
+// const server = http.createServer(app);
+
+// Create a Socket.IO instance
+// const io = socketIO(server);
+
+// // Socket.IO event listeners
+// io.on('connection', (socket) => {
+//   console.log('A user connected');
+
+//   socket.on('disconnect', () => {
+//     console.log('A user disconnected');
+//   });
+
+//   socket.on('message', (message) => {
+//     console.log('Received message:', message);
+//     // Broadcast the message to other connected clients
+//     socket.broadcast.emit('message', message);
+//   });
+// });
+
+// socket.on('disconnect', () => {
+//   console.log('A user disconnected');
+// });
 // Routes
-// Get all users
+// Get all usersy
+
+const io = socket(server, {
+  cors: {
+    origin: "http://localhost:3001",
+    credentials: true,
+  },
+});
+
+global.onlineUsers = new Map();
+io.on("connection", (socket) => {
+  global.chatSocket = socket;
+  socket.on("add-user", (userId) => {
+    console.log(socket.id)
+    console.log(userId)
+    onlineUsers.set(userId, socket.id);
+  });
+
+  socket.on("send-msg", (data) => {
+    const sendUserSocket = onlineUsers.get(JSON.stringify(data.to));
+    console.log(data.to)
+    console.log(onlineUsers)
+    console.log(sendUserSocket)
+    console.log(data)
+    if (sendUserSocket) {
+      socket.to(sendUserSocket).emit("msg-recieve", data.msg);
+   }
+  });
+});
+ 
 app.get('/users', async (req, res) => {
   try {
     const allUsers = await pool.query('SELECT * FROM users');
+    
     res.json(allUsers.rows);
   } catch (error) {
     console.error(error.message);
@@ -408,20 +464,28 @@ app.delete('/users/:id', async (req, res) => {
   }
 });
 
-// Start the server
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
-});
 
+//Get All CO-workers
+app.get("/Get_CoWorkers", (req, res) => {
+ 
+  console.log("im a server")
+  pool.query(`SELECT cw.* FROM co_workers cw
+ `, (err, result) => {
+      res.send(result);
 
+  })
+})
 
 
 
 //Get All CO-workers
-app.get("/Get_CoWorkers", (req, res) => {
+app.get("/Get_CoWorkers2/:workspace_id", (req, res) => {
+  const id = req.params.workspace_id;
   console.log("im a server")
-  pool.query(`SELECT * FROM co_workers`, (err, result) => {
+  pool.query(`SELECT cw.*
+  FROM co_workers cw
+  JOIN co_worker_workspace cww ON cw.id = cww.co_worker_id
+  WHERE cww.workspace_id = ${id}`, (err, result) => {
       res.send(result);
 
   })
@@ -430,6 +494,18 @@ app.get("/Get_CoWorkers", (req, res) => {
 app.get("/Get_Channels", (req, res) => {
   console.log("im a server")
   pool.query(`SELECT * FROM channel`, (err, result) => {
+      res.send(result);
+
+  })
+})
+
+app.get("/Get_Channel/:workspace_id", (req, res) => {
+  console.log("im a server")
+  const id = req.params.workspace_id;
+  pool.query(`SELECT c.*
+  FROM channel c
+  JOIN co_worker_group cw ON c.id = cw.channel_id
+  WHERE cw.workspace_id = ${id}`, (err, result) => {
       res.send(result);
 
   })
@@ -545,18 +621,4 @@ app.delete('/Del_Member/:coworkerID/:groupId', async (req, res) => {
   }
 });
 
-// Socket connection event
-io.on('connection', (socket) => {
-  console.log('New client connected');
 
-  // Handle incoming messages from the client
-  socket.on('message', (data) => {
-    // Broadcast the message to all connected clients
-    io.emit('message', data);
-  });
-
-  // Handle disconnection
-  socket.on('disconnect', () => {
-    console.log('Client disconnected');
-  });
-});

@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState,useRef } from "react";
+import axios from "axios";
+import { io } from 'socket.io-client';
 import img1 from "../images/add-user.png";
-import img2 from "../images/switch.png";
+import img2 from "../images/turn-off.png";
 import img3 from "../images/plus.png";
 import img4 from "../images/settings.png";
 import img5 from "../images/send.png";
 import img6 from "../images/zoom.png";
 import img7 from "../images/microphone.png";
-import img8 from "../images/shared-folder.png";
-import img9 from "../images/search.png";
-import img10 from "../images/meeting.png";
-import img11 from "../images/man.png";
-import img12 from "../images/add-message.png";
-
-import AddCoworker from './AddCoworker';
-import CreateChannel from './CreateChannel';
-import GroupMember from './GroupMember';
+import img8 from "../images/attachment.png";
+import AddCoworker from "./AddCoworker";
+import CreateChannel from "./CreateChannel";
+import GroupMember from "./GroupMember";
+import { v4 as uuidv4 } from 'uuid';
 
 function Chatpage({ onClose }) {
+  const scrollRef = useRef()
   const [addCoworker, setAddPopup] = useState(false);
   const [createGroupPG, setCreateGroupPG] = useState(false);
   const [Addmember, setAddmember] = useState(false);
@@ -26,41 +24,89 @@ function Chatpage({ onClose }) {
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [selectedDirectMessage, setSelectedDirectMessage] = useState(null);
   const [showAddButton, setShowAddButton] = useState(false);
-  const [workspaceName, setWorkspaceName] = useState('');
+  const [workspaceName, setWorkspaceName] = useState("");
   const workspace_id = localStorage.getItem("workIDss");
-  const adminuser = localStorage.getItem('email_token');
+  const adminuser = localStorage.getItem("Coworker");
+  const [inputMessage, setInputMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [corworkerID, setCoworkerID] = useState("");
 
   useEffect(() => {
     fetchData();
-  }, [workspace_id]);
+
+//     const socket = io();
+
+//     socket.on("connect", () => {
+//       console.log("Connected to socket.io server");
+//     });
+
+//     socket.on("disconnect", () => {
+//       console.log("Disconnected from socket.io server");
+//     });
+
+//     socket.on("message", (message) => {
+//       console.log("Received message:", message);
+//       // Add the received message to the state
+//       setMessages((prevMessages) => [...prevMessages, message]);
+// });
+},[])
+  // 
+  const [socket, setSocket] = useState(null);
+  useEffect(() => {
+    const socketInstance = io('http://localhost:3000');
+    if (adminuser) {
+      socketInstance.emit("add-user", adminuser);
+    }
+    
+    setSocket(socketInstance);
+  }, [adminuser]);
+  
+  // useEffect(() => {
+  //   const socketInstance = io('http://localhost:3000');
+
+  //   socketInstance.on('connect', () => {
+  //     console.log('Connected to Socket.IO server');
+  //     socketInstance.emit('add-user', adminuser); // Replace with the appropriate user ID
+  //   });
+
+  //   socketInstance.on('disconnect', () => {
+  //     console.log('Disconnected from Socket.IO server');
+  //   });
+
+  //   setSocket(socketInstance);
+
+  //    return () => {
+  //      socketInstance.disconnect();
+  //   };
+  // }, []);
 
   const fetchData = () => {
-    // Fetch channels data from the database using Axios
-    axios.get('http://localhost:3000/Get_Channels')
-      .then(response => {
+    axios
+      .get(`http://localhost:3000/Get_Channels`)
+      .then((response) => {
         setChannels(response.data.rows);
       })
-      .catch(error => {
-        console.error('Error fetching channels:', error);
+      .catch((error) => {
+        console.error("Error fetching channels:", error);
       });
 
-    // Fetch coworkers data from the database using Axios
-    axios.get('http://localhost:3000/Get_CoWorkers')
-      .then(response => {
+    axios
+      .get(`http://localhost:3000/Get_CoWorkers`)
+      .then((response) => {
         setCoworkers(response.data.rows);
       })
-      .catch(error => {
-        console.error('Error fetching coworkers:', error);
+      .catch((error) => {
+        console.error("Error fetching coworkers:", error);
       });
 
-    // Fetch workspace name from the database based on the workspace ID
-    axios.get(`http://localhost:3000/Get_Workspace/${workspace_id}`)
-      .then(response => {
+    axios
+      .get(`http://localhost:3000/Get_Workspace/${workspace_id}`)
+      .then((response) => {
         const workspaceName = response.data.rows[0].name;
         setWorkspaceName(workspaceName);
       })
-      .catch(error => {
-        console.error('Error fetching workspace name:', error);
+      .catch((error) => {
+        console.error("Error fetching workspace name:", error);
       });
   };
 
@@ -98,37 +144,88 @@ function Chatpage({ onClose }) {
   const handleDirectMessageClick = (directMessage) => {
     setSelectedChannel(null);
     setSelectedDirectMessage(directMessage);
+    setCoworkerID(directMessage);
+console.log("selected USer", corworkerID)
     setShowAddButton(false);
   };
 
   const handleRemoveDirectMessage = (coworkerId) => {
-    axios.delete(`http://localhost:3000/Remove_Coworker/${coworkerId}`)
-      .then(response => {
-        console.log('Direct message coworker removed successfully');
-        fetchData(); // Fetch updated data after removal
+    axios
+      .delete(`http://localhost:3000/Remove_Coworker/${coworkerId}`)
+      .then((response) => {
+        console.log("Direct message coworker removed successfully");
+        fetchData();
       })
-      .catch(error => {
-        console.error('Error removing direct message coworker:', error);
+      .catch((error) => {
+        console.error("Error removing direct message coworker:", error);
       });
   };
 
   const handleCreateGroup = (newGroupData) => {
-    axios.post('http://localhost:3000/Create_Group', newGroupData)
-      .then(response => {
-        console.log('Group created successfully');
+    axios
+      .post("http://localhost:3000/Create_Group", newGroupData)
+      .then((response) => {
+        console.log("Group created successfully");
         fetchData(); // Fetch updated data after creation
       })
-      .catch(error => {
-        console.error('Error creating group:', error);
+      .catch((error) => {
+        console.error("Error creating group:", error);
       });
   };
 
+  const handleSendMessage = () => {
+    const messageData = {
+      sender: adminuser,
+      receiver: corworkerID.id,
+      message: inputMessage,
+    };
+  
+    // Check if socket is available
+    if (socket) {
+      socket.emit("send-msg", {
+        to: corworkerID.id,
+        from: parseInt(adminuser),
+        msg: inputMessage,
+      });
+  
+      // Add the sent message to the state
+      setMessages((prevMessages) => [...prevMessages, messageData]);
+  
+      setInputMessage(""); // Clear the input message field after sending
+    } else {
+      console.log("Socket connection not available");
+    }
+  };
+  
+
+  const messageshandle = (e) => {
+    setInputMessage(e.target.value);
+  };
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  useEffect(() => {
+    console.log("socket is check : ", socket)
+    if (socket) {
+      socket.on("msg-recieve", (msg) => {
+        console.log(msg);
+        setArrivalMessage({ fromSelf: false, message: msg });
+      });
+    }
+  }, [socket]);
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
   return (
     <>
-                  <style>
-   
-   {`
-   * {
+     <style>
+        {`/* Add these CSS styles to your existing stylesheets or create a new CSS file */
+.chat-section {
+  /* Existing styles for the chat section */
+}
+* {
  margin: 0;
  padding: 0;
  box-sizing: border-box;
@@ -138,25 +235,24 @@ function Chatpage({ onClose }) {
  display: flex;
 }
 
-              .left-section {
-                width: 7%;
-                height: 100vh;
-                background-color: #0047AB;
-                display: flex;
-                flex-direction: column;
-                /* justify-content: space-between; */
-                text-align: center;
-                padding: 10px;
-                color:white;
-            }
+.left-section {
+ width: 10%;
+ height: 100vh;
+ background-color: #2b2d42;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+ align-items: center;
+ padding: 20px;
+ color: white;
+}
 
-            .workspace{
-                margin-top: 10px;
-                font-weight: bold;
-                font-size: 20px;
-                margin-bottom: 20px;
-            }
-              
+.workspace {
+ font-weight: bold;
+ font-size: 16px;
+ margin-bottom: 20px;
+}
+
 /* Boxes and logout button in the left section */
 .box {
  text-align: center;
@@ -175,51 +271,25 @@ function Chatpage({ onClose }) {
  border: none;
 }
 
-            .adduser img{
-                width: 45px;
-                height: 45px;
-                color: #fff;
-                cursor:pointer;
-            }
+.adduser img {
+ width: 25px;
+ height: 25px;
+ cursor: pointer;
+}
 
-            .logout-button{
-                justify-content: flex-end;
-                margin-top: 40rem;
-            }
-            .logout-button img{
-                width: 50px;
-                height: 50px;
-                cursor: pointer;
-            }
-
-          .profile img{
-                width: 75px;
-                height: 70px;
-                margin: 20px;
-                cursor:pointer;
-            }
-
-
-            .man {
-                display: flex;
-                align-items: center;
-            }
-            .username1{
-               margin: 15px;
-            }
-
-            .man img{
-                margin-left: auto;
-                width: 50px;
-                height: 50px;
-                cursor:pointer;
-            }
-
-
+.logout-button {
+ align-self: flex-end;
+ margin-top: auto;
+}
+.logout-button img {
+ width: 30px;
+ height: 30px;
+ cursor: pointer;
+}
 
 /* Middle section with 25% width */
 .middle-section {
- width: 30%;
+ width: 25%;
  height: 100vh;
  background-color: #f2f2f2;
  padding: 20px;
@@ -230,7 +300,7 @@ function Chatpage({ onClose }) {
 
 /* Right section with 65% width */
 .right-section {
- width: 80%;
+ width: 65%;
  height: 100vh;
  background-color: #edf2f4;
  display: flex;
@@ -243,122 +313,77 @@ function Chatpage({ onClose }) {
  flex-direction: column;
 }
 
-          .navbar {
-                display: flex;
-                align-items: center;
-                padding: 10px;
-                background-color: #F08F3E;
-                color:white;
-              } 
+.navbar {
+ display: flex;
+ align-items: center;
+ padding: 10px;
+ background-color: #2b2d42;
+ color: white;
+}
 
-            .navbar .username {
-                font-weight: bold;
-                font-size: 30px;
-                margin-right: auto;
-                color: #ffff;
-              }
+.username {
+ font-weight: bold;
+ margin-right: auto;
+ color: white;
+}
 
-              .search-bar {
-                display: flex;
-                align-items: center;
-                margin-right: 10px;
-              }
-              .search-button img{
-                width: 25px;
-                paddingTop: 2px;
-                // background-color: #2980B9;
-                font-size: 22px;
-                // border: none;
-                outline: none;
-                cursor: pointer;
 
-              }
-              
-              .search-bar input[type="text"] {
-                padding: 5px;
-              }
-              
-              .search-button {
-                margin: 10px;
-                // padding: 6px;
-                background-color: #f3f0f0;
-                border: none;
-                outline: none;
-                cursor: pointer;
-              }
+.settings-button img {
+ width: 22px;
+ background-color: none;
+ border: none;
+ outline: none;
+ cursor: pointer;
+ font-size: 20px;
+}
 
-              .plus-button img{
-                // padding: 7px;
-                width: 30px;
-                height: 30px;
-                background-color: none;
-                background: none;
-                border: none;
-                outline: none;
-                cursor: pointer;
-                font-size: 25px;
-              }
-
-.settings-button img{
-                // padding: 7px;
-                width: 30px;
-                height: 30px;
-                background-color: none;
-                background: none;
-                border: none;
-                outline: none;
-                cursor: pointer;
-                font-size: 25px;
-              }
 .messages {
-                flex-grow: 1;
-                overflow-y: scroll;
-                padding: 10px;
-                background-color: #f9f9f9;
-              }
-              
-              .message-input {
-                display: flex;
-                align-items: center;
-                padding: 10px;
-                backgroundColor: #20980B9;
-              }
-              
-              .message-input input[type="text"] {
-                flex-grow: 1;
-                padding: 5px;
-              }
-              
-              .send-button img{
-                width: 25px;
-                paddingTop: 2px;
-                // background-color: #2980B9;
-                font-size: 22px;
-                // border: none;
-                outline: none;
-                cursor: pointer;
-              }
-              
-              .action-bar {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 7px;
-                background-color: #f2f2f2;
-              }
-              
-              .action-bar{
-                display:flex;
-              }          
-              .icon a img{
-                width:25px;
-                height:25px;
-                margin-left:30px;
-              }
+ flex-grow: 1;
+ overflow-y: scroll;
+ padding: 10px;
+ background-color: #f9f9f9;
+}
 
-              .middle-section{
-                background-color:#ffffff;
-              }
+.message-input {
+ display: flex;
+ align-items: center;
+ padding: 10px;
+ background-color: #edf2f4;
+}
+
+.message-input input[type="text"] {
+ flex-grow: 1;
+ padding: 5px;
+}
+
+.send-button img {
+ width: 25px;
+ padding-top: 2px;
+ font-size: 22px;
+ outline: none;
+ cursor: pointer;
+}
+
+.action-bar {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ padding: 7px;
+ background-color: #edf2f4;
+}
+
+.action-bar {
+ display: flex;
+}
+.icon a img {
+ width: 25px;
+ height: 25px;
+ margin-left: 20px;
+}
+
+.middle-section {
+ background-color: #edf2f4;
+}
 
 .channels {
  display: flex;
@@ -453,19 +478,101 @@ function Chatpage({ onClose }) {
             color: #3498db;
             font-size: 14px;
           }
-   `}
- </style>
+          .message-item {
+  margin-bottom: 10px;
+}
+
+.message-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.message {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.message.received .content {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 80%;
+}
+
+.message.sent .content {
+  background-color: #d4edda;
+  border-radius: 10px;
+  padding: 10px;
+  max-width: 80%;
+  margin-left: auto;
+}
+
+.message .content p {
+  margin: 0;
+}
+
+.chat-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.message-input {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.message-input input {
+  flex: 1;
+  border: none;
+  padding: 8px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.message-input button {
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #f7f7f7;
+}
+
+.action-bar .icon {
+  margin-right: 10px;
+}
+
+.action-bar .icon img {
+  width: 20px;
+  height: 20px;
+}
+
+
+`}
+      </style>
       <div className="chatpage">
         <div className="left-section">
           <div className="workspace">{workspaceName}</div>
-          <div className= "profile"><a><img src={img10} alt="" /></a></div>
           {adminuser === null ? (
             <></>
           ) : (
             <div className="adduser">
-              <div className="adduser" onClick={addCoworkerPopup}>
-                <a href=''><img src={img1} alt="adduser" /></a>
-              </div>
+              <button className="adduser-button" onClick={addCoworkerPopup}>
+              Add Coworker
+              </button>
               {addCoworker && (
                 <div className="popup-container">
                   <div className="popup">
@@ -476,28 +583,19 @@ function Chatpage({ onClose }) {
             </div>
           )}
           <div>
-            <div className="logout-button">
-              <a href=''><img src={img2} alt="" /></a>
-            </div>
+            <button className="logout-button">
+              <img src={img2} alt="" />
+            </button>
           </div>
         </div>
 
         <div className="middle-section">
-          <div className="man">
-              <a href=""><img src={img11} alt="man" /></a>
-                  <div className="username1"><strong>John Doe</strong></div>
-                  <div className="add-message">
-                       <a href=""><img src={img12} alt="add-message" /></a>
-                  </div>
-                  </div>
-
-                    <br />
-                    <hr />
-                    <br />
           <div className="channels">
             <span className="channels-text">Channels</span>
             <span>
-              <button className="add-btn" onClick={createGroup}><a href='' className='plus-button'><img src={img3} alt="" /></a></button>
+              <button className="add-btn" onClick={createGroup}>
+                +
+              </button>
               {createGroupPG && (
                 <div className="popup-container">
                   <div className="popup">
@@ -508,11 +606,11 @@ function Chatpage({ onClose }) {
             </span>
           </div>
           <ul className="channel-list">
-            {channels.map(channel => (
+            {channels.map((channel) => (
               <li
                 key={channel.id}
                 onClick={() => handleChannelClick(channel)}
-                className={selectedChannel === channel ? 'selected' : ''}
+                className={selectedChannel === channel ? "selected" : ""}
               >
                 {channel.name}
               </li>
@@ -524,19 +622,22 @@ function Chatpage({ onClose }) {
           <div className="direct-messages">
             <span className="channels-text">Direct Messages</span>
             <span>
-              <button className="add-btn"><a href='' className='plus-button'><img src={img3} alt="" /></a></button>
+              <button className="add-btn">+</button>
             </span>
           </div>
           <ul className="coworker-list">
-            {coworkers.map(coworker => (
+            {coworkers.map((coworker) => (
               <li
                 key={coworker.id}
                 onClick={() => handleDirectMessageClick(coworker)}
-                className={selectedDirectMessage === coworker ? 'selected' : ''}
+                className={selectedDirectMessage === coworker ? "selected" : ""}
               >
                 {coworker.name}
                 {adminuser !== null && (
-                  <div className="group-member-action" onClick={() => handleRemoveDirectMessage(coworker.id)}>
+                  <div
+                    className="group-member-action"
+                    onClick={() => handleRemoveDirectMessage(coworker.id)}
+                  >
                     Remove
                   </div>
                 )}
@@ -549,9 +650,15 @@ function Chatpage({ onClose }) {
           <div className="chat-section">
             <div className="navbar">
               <div className="username">
-                {selectedChannel ? selectedChannel.name : selectedDirectMessage ? selectedDirectMessage.name : 'John Doe'}
+                {selectedChannel
+                  ? selectedChannel.name
+                  : selectedDirectMessage
+                  ? selectedDirectMessage.name
+                  : "John Doe"}
                 {showAddButton && (
-                  <button className="add-member-button" onClick={addmembers}><a href='' className='plus-button'><img src={img3} alt="" /></a></button>
+                  <button className="add-member-button" onClick={addmembers}>
+                    +
+                  </button>
                 )}
                 {Addmember && (
                   <div className="popup-container">
@@ -560,23 +667,61 @@ function Chatpage({ onClose }) {
                     </div>
                   </div>
                 )}
-              </div >
-              <div className='search'>
-                 <button className="search-button"><img src={img9} alt="" /></button>
-                 </div>
-                 <a href='' className='settings-button'><img src={img4} alt="" /></a>
+              </div>
+              <a href="" className="settings-button">
+                <img src={img4} alt="" />
+              </a>
             </div>
-            <div className="messages">
-              {/* Chat messages go here */}
+
+            <div className="chat-section">
+            <div className="chat-body">
+  <ul className="message-list">
+  {messages.map((message) => {
+  return (
+    <div ref={scrollRef} key={uuidv4()}>
+      <div
+        className={`message ${message.fromSelf ? "sent" : "received"}`}
+      >
+        <div className="content">
+        
+          <p>{message.message}</p>
+        </div>
+      </div>
+    </div>
+  );
+})}
+
+  </ul>
+</div>
+
             </div>
             <div className="message-input">
-              <input type="text" placeholder="Type your message..." />
-              <a href="" className='send-button'><img src={img5} alt="" /></a>
+              <input
+                type="text"
+                placeholder="Type your message..."
+                value={inputMessage}
+                onChange={messageshandle}
+              />
+              <button onClick={handleSendMessage}>
+             send
+              </button>
             </div>
             <div className="action-bar">
-              <div className="icon"><a href=""><img src={img8} alt="" /></a></div>
-              <div className="icon"><a href=""><img src={img7} alt="" /></a></div>
-              <div className="icon"><a href=""><img src={img6} alt="" /></a></div>
+              <div className="icon">
+                <a href="">
+                  <img src={img8} alt="" />
+                </a>
+              </div>
+              <div className="icon">
+                <a href="">
+                  <img src={img7} alt="" />
+                </a>
+              </div>
+              <div className="icon">
+                <a href="">
+                  <img src={img6} alt="" />
+                </a>
+              </div>
             </div>
           </div>
         </div>

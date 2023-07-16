@@ -43,9 +43,10 @@ console.log("login2",localStorage.getItem("workIDss"))
             seterr(false)
             setErrors("");
             console.log("helo",res.data.userId)
-            //localStorage.setItem('email_token', res.data.userId)
             localStorage.removeItem("email_token");
+            localStorage.setItem("Coworker",res.data.userId)
             navigate('/chatpage');
+           
           }
      
 
