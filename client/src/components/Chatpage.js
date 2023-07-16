@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import img1 from "../images/add-user.png";
-import img2 from "../images/turn-off.png";
+import img2 from "../images/switch.png";
 import img3 from "../images/plus.png";
 import img4 from "../images/settings.png";
 import img5 from "../images/send.png";
 import img6 from "../images/zoom.png";
 import img7 from "../images/microphone.png";
-import img8 from "../images/attachment.png";
+import img8 from "../images/shared-folder.png";
+import img9 from "../images/search.png";
+import img10 from "../images/meeting.png";
+import img11 from "../images/man.png";
+import img12 from "../images/add-message.png";
 
 import AddCoworker from './AddCoworker';
 import CreateChannel from './CreateChannel';
@@ -134,24 +138,25 @@ function Chatpage({ onClose }) {
  display: flex;
 }
 
-.left-section {
- width: 10%;
- height: 100vh;
- background-color: #2b2d42;
- display: flex;
- flex-direction: column;
- justify-content: space-between;
- align-items: center;
- padding: 20px;
- color: white;
-}
+              .left-section {
+                width: 7%;
+                height: 100vh;
+                background-color: #0047AB;
+                display: flex;
+                flex-direction: column;
+                /* justify-content: space-between; */
+                text-align: center;
+                padding: 10px;
+                color:white;
+            }
 
-.workspace {
- font-weight: bold;
- font-size: 16px;
- margin-bottom: 20px;
-}
-
+            .workspace{
+                margin-top: 10px;
+                font-weight: bold;
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+              
 /* Boxes and logout button in the left section */
 .box {
  text-align: center;
@@ -170,25 +175,51 @@ function Chatpage({ onClose }) {
  border: none;
 }
 
-.adduser img {
- width: 25px;
- height: 25px;
- cursor: pointer;
-}
+            .adduser img{
+                width: 45px;
+                height: 45px;
+                color: #fff;
+                cursor:pointer;
+            }
 
-.logout-button {
- align-self: flex-end;
- margin-top: auto;
-}
-.logout-button img {
- width: 30px;
- height: 30px;
- cursor: pointer;
-}
+            .logout-button{
+                justify-content: flex-end;
+                margin-top: 40rem;
+            }
+            .logout-button img{
+                width: 50px;
+                height: 50px;
+                cursor: pointer;
+            }
+
+          .profile img{
+                width: 75px;
+                height: 70px;
+                margin: 20px;
+                cursor:pointer;
+            }
+
+
+            .man {
+                display: flex;
+                align-items: center;
+            }
+            .username1{
+               margin: 15px;
+            }
+
+            .man img{
+                margin-left: auto;
+                width: 50px;
+                height: 50px;
+                cursor:pointer;
+            }
+
+
 
 /* Middle section with 25% width */
 .middle-section {
- width: 25%;
+ width: 30%;
  height: 100vh;
  background-color: #f2f2f2;
  padding: 20px;
@@ -199,7 +230,7 @@ function Chatpage({ onClose }) {
 
 /* Right section with 65% width */
 .right-section {
- width: 65%;
+ width: 80%;
  height: 100vh;
  background-color: #edf2f4;
  display: flex;
@@ -212,77 +243,122 @@ function Chatpage({ onClose }) {
  flex-direction: column;
 }
 
-.navbar {
- display: flex;
- align-items: center;
- padding: 10px;
- background-color: #2b2d42;
- color: white;
-}
+          .navbar {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                background-color: #F08F3E;
+                color:white;
+              } 
 
-.username {
- font-weight: bold;
- margin-right: auto;
- color: white;
-}
+            .navbar .username {
+                font-weight: bold;
+                font-size: 30px;
+                margin-right: auto;
+                color: #ffff;
+              }
 
+              .search-bar {
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+              }
+              .search-button img{
+                width: 25px;
+                paddingTop: 2px;
+                // background-color: #2980B9;
+                font-size: 22px;
+                // border: none;
+                outline: none;
+                cursor: pointer;
 
-.settings-button img {
- width: 22px;
- background-color: none;
- border: none;
- outline: none;
- cursor: pointer;
- font-size: 20px;
-}
+              }
+              
+              .search-bar input[type="text"] {
+                padding: 5px;
+              }
+              
+              .search-button {
+                margin: 10px;
+                // padding: 6px;
+                background-color: #f3f0f0;
+                border: none;
+                outline: none;
+                cursor: pointer;
+              }
 
+              .plus-button img{
+                // padding: 7px;
+                width: 30px;
+                height: 30px;
+                background-color: none;
+                background: none;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                font-size: 25px;
+              }
+
+.settings-button img{
+                // padding: 7px;
+                width: 30px;
+                height: 30px;
+                background-color: none;
+                background: none;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                font-size: 25px;
+              }
 .messages {
- flex-grow: 1;
- overflow-y: scroll;
- padding: 10px;
- background-color: #f9f9f9;
-}
+                flex-grow: 1;
+                overflow-y: scroll;
+                padding: 10px;
+                background-color: #f9f9f9;
+              }
+              
+              .message-input {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+                backgroundColor: #20980B9;
+              }
+              
+              .message-input input[type="text"] {
+                flex-grow: 1;
+                padding: 5px;
+              }
+              
+              .send-button img{
+                width: 25px;
+                paddingTop: 2px;
+                // background-color: #2980B9;
+                font-size: 22px;
+                // border: none;
+                outline: none;
+                cursor: pointer;
+              }
+              
+              .action-bar {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 7px;
+                background-color: #f2f2f2;
+              }
+              
+              .action-bar{
+                display:flex;
+              }          
+              .icon a img{
+                width:25px;
+                height:25px;
+                margin-left:30px;
+              }
 
-.message-input {
- display: flex;
- align-items: center;
- padding: 10px;
- background-color: #edf2f4;
-}
-
-.message-input input[type="text"] {
- flex-grow: 1;
- padding: 5px;
-}
-
-.send-button img {
- width: 25px;
- padding-top: 2px;
- font-size: 22px;
- outline: none;
- cursor: pointer;
-}
-
-.action-bar {
- display: flex;
- justify-content: center;
- align-items: center;
- padding: 7px;
- background-color: #edf2f4;
-}
-
-.action-bar {
- display: flex;
-}
-.icon a img {
- width: 25px;
- height: 25px;
- margin-left: 20px;
-}
-
-.middle-section {
- background-color: #edf2f4;
-}
+              .middle-section{
+                background-color:#ffffff;
+              }
 
 .channels {
  display: flex;
@@ -382,13 +458,14 @@ function Chatpage({ onClose }) {
       <div className="chatpage">
         <div className="left-section">
           <div className="workspace">{workspaceName}</div>
+          <div className= "profile"><a><img src={img10} alt="" /></a></div>
           {adminuser === null ? (
             <></>
           ) : (
             <div className="adduser">
-              <button className="adduser-button" onClick={addCoworkerPopup}>
-                <img src={img1} alt="adduser" />
-              </button>
+              <div className="adduser" onClick={addCoworkerPopup}>
+                <a href=''><img src={img1} alt="adduser" /></a>
+              </div>
               {addCoworker && (
                 <div className="popup-container">
                   <div className="popup">
@@ -399,17 +476,28 @@ function Chatpage({ onClose }) {
             </div>
           )}
           <div>
-            <button className="logout-button">
-              <img src={img2} alt="" />
-            </button>
+            <div className="logout-button">
+              <a href=''><img src={img2} alt="" /></a>
+            </div>
           </div>
         </div>
 
         <div className="middle-section">
+          <div className="man">
+              <a href=""><img src={img11} alt="man" /></a>
+                  <div className="username1"><strong>John Doe</strong></div>
+                  <div className="add-message">
+                       <a href=""><img src={img12} alt="add-message" /></a>
+                  </div>
+                  </div>
+
+                    <br />
+                    <hr />
+                    <br />
           <div className="channels">
             <span className="channels-text">Channels</span>
             <span>
-              <button className="add-btn" onClick={createGroup}>+</button>
+              <button className="add-btn" onClick={createGroup}><a href='' className='plus-button'><img src={img3} alt="" /></a></button>
               {createGroupPG && (
                 <div className="popup-container">
                   <div className="popup">
@@ -436,7 +524,7 @@ function Chatpage({ onClose }) {
           <div className="direct-messages">
             <span className="channels-text">Direct Messages</span>
             <span>
-              <button className="add-btn">+</button>
+              <button className="add-btn"><a href='' className='plus-button'><img src={img3} alt="" /></a></button>
             </span>
           </div>
           <ul className="coworker-list">
@@ -463,7 +551,7 @@ function Chatpage({ onClose }) {
               <div className="username">
                 {selectedChannel ? selectedChannel.name : selectedDirectMessage ? selectedDirectMessage.name : 'John Doe'}
                 {showAddButton && (
-                  <button className="add-member-button" onClick={addmembers}>+</button>
+                  <button className="add-member-button" onClick={addmembers}><a href='' className='plus-button'><img src={img3} alt="" /></a></button>
                 )}
                 {Addmember && (
                   <div className="popup-container">
@@ -472,15 +560,18 @@ function Chatpage({ onClose }) {
                     </div>
                   </div>
                 )}
-              </div>
-              <a href="" className="settings-button"><img src={img4} alt="" /></a>
+              </div >
+              <div className='search'>
+                 <button className="search-button"><img src={img9} alt="" /></button>
+                 </div>
+                 <a href='' className='settings-button'><img src={img4} alt="" /></a>
             </div>
             <div className="messages">
               {/* Chat messages go here */}
             </div>
             <div className="message-input">
               <input type="text" placeholder="Type your message..." />
-              <a href="" className="send-button"><img src={img5} alt="" /></a>
+              <a href="" className='send-button'><img src={img5} alt="" /></a>
             </div>
             <div className="action-bar">
               <div className="icon"><a href=""><img src={img8} alt="" /></a></div>
