@@ -8,7 +8,14 @@ const { MongoClient } = require('mongodb');
 const mongoUrl = 'mongodb://127.0.0.1:27017/';
 const mongoClient = new MongoClient(mongoUrl);
 const redisClient = new Redis();
+const http = require('http');
 
+const socketIO = require('socket.io');
+
+
+const server = http.createServer(app);
+
+const io = socketIO(server);
 // Middleware
 app.use(express.json());
 app.use(cors());
@@ -452,6 +459,28 @@ app.get('/Get_Workspace/:workspace_id', (req, res) => {
 
 })
 });
+
+//get work space with user id
+app.get('/getAllWorkspaces/:check', (req, res) => {
+  const userID = req.params.check;
+  console.log("id", userID);
+  pool.query(`
+    SELECT workspace.id, workspace.name
+    FROM workspace
+    INNER JOIN admin_users ON workspace.admin_id = ${userID}
+  `, (err, result) => {
+    if (err) {
+      console.error("Error retrieving workspaces:", err);
+      res.status(500).send("Error retrieving workspaces");
+    } else {
+      const workspaces = result.rows.map(row => row.name);
+      res.send(workspaces);
+      console.log("Workspaces:", workspaces);
+    }
+  });
+});
+
+
 // Endpoint to add a new co-worker to channel
 app.post('/Add_Member/:coworkerID/:groupId', async (req, res) => {
   try {
@@ -514,4 +543,20 @@ app.delete('/Del_Member/:coworkerID/:groupId', async (req, res) => {
     console.error('Error removing co-worker from the channel:', error);
     res.status(500).json({ message: 'Error removing co-worker from the channel' });
   }
+});
+
+// Socket connection event
+io.on('connection', (socket) => {
+  console.log('New client connected');
+
+  // Handle incoming messages from the client
+  socket.on('message', (data) => {
+    // Broadcast the message to all connected clients
+    io.emit('message', data);
+  });
+
+  // Handle disconnection
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
 });
