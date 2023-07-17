@@ -2,13 +2,14 @@ import React, { useEffect, useState,useRef } from "react";
 import axios from "axios";
 import { io } from 'socket.io-client';
 import img1 from "../images/add-user.png";
-import img2 from "../images/turn-off.png";
-import img3 from "../images/plus.png";
+import img2 from "../images/logout.png";
+import img3 from "../images/group.png";
 import img4 from "../images/settings.png";
-import img5 from "../images/send.png";
+import img5 from "../images/profile.png";
 import img6 from "../images/zoom.png";
 import img7 from "../images/microphone.png";
 import img8 from "../images/attachment.png";
+import img9 from "../images/logofecile.png";
 import AddCoworker from "./AddCoworker";
 import CreateChannel from "./CreateChannel";
 import GroupMember from "./GroupMember";
@@ -238,7 +239,7 @@ console.log("selected USer", corworkerID)
 .left-section {
  width: 10%;
  height: 100vh;
- background-color: #2980B9;
+ background-color: #1F6A9B;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
@@ -250,7 +251,7 @@ console.log("selected USer", corworkerID)
 .workspace {
  font-weight: bold;
  font-size: 16px;
- margin-bottom: 20px;
+ margin-bottom: 50px;
 }
 
 /* Boxes and logout button in the left section */
@@ -271,15 +272,17 @@ console.log("selected USer", corworkerID)
  border: none;
 }
 
-.adduser img {
+.add-user img {
  width: 25px;
  height: 25px;
  cursor: pointer;
 }
 
+
+
 .logout-button {
  align-self: flex-end;
- margin-top: auto;
+ margin-right: 35px;
 }
 .logout-button img {
  width: 30px;
@@ -414,19 +417,11 @@ console.log("selected USer", corworkerID)
  font-weight: bold;
 }
 
-.channel-list {
- list-style-type: none;
- padding: 0;
- margin: 10px 0;
- transition: max-height 0.3s ease, opacity 0.3s ease;
-}
 
-.channel-list li {
- padding: 5px;
- cursor: pointer;
-}
+
+
 .channels-open .channel-list {
- max-height: 200px; /* Adjust the value based on your needs */
+ max-height: 100px; /* Adjust the value based on your needs */
 }
 
 .add-btn {
@@ -560,19 +555,65 @@ console.log("selected USer", corworkerID)
   height: 20px;
 }
 
+.channel-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+}
+
+.channel-names {
+  display: flex;
+  align-items: center;
+}
+
+.channel-image {
+  width: 20px; /* adjust the width as needed */
+  height: 20px; /* adjust the height as needed */
+  margin-right: 10px; /* adjust the spacing between the image and the channel name */
+}
+
+.coworker-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.coworker-item {
+  display: flex;
+  align-items: center;
+}
+
+.coworker-names {
+  display: flex;
+  align-items: center;
+}
+
+.coworker-image {
+  width: 20px; /* adjust the width as needed */
+  height: 20px; /* adjust the height as needed */
+  margin-right: 10px; /* adjust the spacing between the image and the channel name */
+}
+
+.nav__logo {
+  height: 4.5rem;
+  transition: all 0.3s;
+}
 
 `}
       </style>
       <div className="chatpage">
         <div className="left-section">
-          <div className="workspace">{workspaceName}</div>
+          <img src={img9} alt="Facile" className="nav__logo" id="logo" />
+          <div className="workspace">WorkSpace{workspaceName}</div>
           {adminuser === null ? (
             <></>
           ) : (
-            <div className="adduser">
-              <button className="adduser-button" onClick={addCoworkerPopup}>
-              Add Coworker
-              </button>
+            <div className="add-user">
+                <img onClick={addCoworkerPopup} src={img1} alt="" />
+
               {addCoworker && (
                 <div className="popup-container">
                   <div className="popup">
@@ -582,10 +623,8 @@ console.log("selected USer", corworkerID)
               )}
             </div>
           )}
-          <div>
-            <button className="logout-button">
+          <div className= "logout-button">
               <img src={img2} alt="" />
-            </button>
           </div>
         </div>
 
@@ -606,16 +645,20 @@ console.log("selected USer", corworkerID)
             </span>
           </div>
           <ul className="channel-list">
-            {channels.map((channel) => (
-              <li
-                key={channel.id}
-                onClick={() => handleChannelClick(channel)}
-                className={selectedChannel === channel ? "selected" : ""}
-              >
-                {channel.name}
-              </li>
-            ))}
-          </ul>
+  {channels.map((channel) => (
+    <li
+      key={channel.id}
+      onClick={() => handleChannelClick(channel)}
+      className={`channel-item ${selectedChannel === channel ? "selected" : ""}`}
+    >
+      <div className="channel-names">
+        <img className="channel-image" src={img3} alt="" />
+        <span>{channel.name}</span>
+      </div>
+    </li>
+  ))}
+</ul>
+
           <br />
           <hr />
           <br />
@@ -631,8 +674,10 @@ console.log("selected USer", corworkerID)
                 key={coworker.id}
                 onClick={() => handleDirectMessageClick(coworker)}
                 className={selectedDirectMessage === coworker ? "selected" : ""}
-              >
-                {coworker.name}
+              ><div>
+                 <img className="coworker-image" src={img5} alt="" />
+                 <span>{coworker.name}</span>
+              </div>
                 {adminuser !== null && (
                   <div
                     className="group-member-action"
