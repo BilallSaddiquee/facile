@@ -479,7 +479,7 @@ app.get("/Get_CoWorkers", (req, res) => {
 
 
 //Get All CO-workers
-app.get("/Get_CoWorkers2/:workspace_id", (req, res) => {
+app.get("/Get_CoWorkers/:workspace_id", (req, res) => {
   const id = req.params.workspace_id;
   console.log("im a server")
   pool.query(`SELECT cw.*
