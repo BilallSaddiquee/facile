@@ -238,7 +238,7 @@ console.log("selected USer", corworkerID)
 .left-section {
  width: 10%;
  height: 100vh;
- background-color: #2b2d42;
+ background-color: #2980B9;
  display: flex;
  flex-direction: column;
  justify-content: space-between;
@@ -317,7 +317,7 @@ console.log("selected USer", corworkerID)
  display: flex;
  align-items: center;
  padding: 10px;
- background-color: #2b2d42;
+ background-color: #2980B9;
  color: white;
 }
 
