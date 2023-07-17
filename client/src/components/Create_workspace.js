@@ -1,24 +1,30 @@
 import react, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import img1 from "../images/Facebook.png";
 import img3 from "../images/instagram.png";
 import img4 from "../images/Linkdin.png";
 import img2 from "../images/signinlogo.png";
 import axios from "axios";
+import AddCoworker from "./AddCoworker";
 function Create_workspace({ onClose }){
  
-  const [password, setPass] = useState("");
 
-  
 const [err, seterr] = useState(false);
  const[errors,setErrors]=useState("");
  const [userID, setUser] = useState("");
   const [workSpacename, setWorkSpaceName] = useState("");
+
   const [Description, setDescription] = useState("");
+  const [addCowroker, setAddPopup] = useState(false);
   useEffect(() => {
     setUser(localStorage.getItem("email_token"));
   }, []);
-  function login() {
+
+  
+
+  const navigate=useNavigate();
+
+  function create() {
  if (workSpacename === "") {
         setErrors("WorkSpace Name is Required");
         seterr(true);
@@ -29,17 +35,15 @@ const [err, seterr] = useState(false);
        
       } 
      else{
-
       axios.post("http://localhost:3000/workspaces", {
         name: workSpacename,
         description:Description,
         userID:userID
       }).then((res) => {
-        
-        console.log(res);
-        
-        
-
+        localStorage.setItem("workID",res.data.newWorkspaceId);
+        console.log("hi tru")
+        setAddPopup(true)
+      
       })
     }
   
@@ -92,7 +96,7 @@ body {
     padding: 20px;
     border-radius: 10px;
     width: 500px;
-    height: 550px;
+    height: 600px;
   }
   
   .top1 {
@@ -219,12 +223,28 @@ body {
           ) : (
             ""
           )}
-          <button onClick={login}>Create WorkSpace</button>
+
+          <button
+                onClick={create}              
+              >
+               Create WorkSpace
+              </button>
+
+              {/* Popup for creating workspaces */}
+              {addCowroker && (
+                <div className="popup-container">
+                  <div className="popup">
+                    <AddCoworker
+                      onClose={() => setAddPopup(false)}
+                    />
+                  </div>
+                </div>
+              )}
+
           <button onClick={onClose}>Close</button>
          
         </div>
-       
-        
+   
       </div>
     </>
   );

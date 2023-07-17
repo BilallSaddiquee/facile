@@ -1,141 +1,170 @@
-import react, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link,useNavigate } from "react-router-dom";
 import img1 from "../images/logofecile.png";
 
 import axios from "axios";
-function CreateChannel({ onClose }){
- 
-  const [email, setEmail] = useState("");
-  const [err, seterr] = useState(false);
- const[errors,setErrors]=useState("");
-  
 
+function CreateChannel({ onClose }) {
+  const [name, setname] = useState("");
+  const [Description, setDes] = useState("");
+  const [err, setErr] = useState(false);
+  const [errors, setErrors] = useState("");
+  const [inputFocused, setInputFocused] = useState(false);
+const navigate= useNavigate();
   function create() {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
-    if (email === "") {
-      setErrors("Email is Required");
-      seterr(true);
-    } else if (!regex.test(email)) {
-      seterr(true)
-      setErrors("Invalid Email");
-    }else{
-
+    const id = localStorage.getItem("workID")
+    if (name === "") {
+      setErrors("name is Required");
+      setErr(true);
+    } else if (Description === "") {
+      setErrors("Description is Required");
+      setErr(true);
+    }  else {
+      axios.post("http://localhost:3000/channels", {
+        name: name,
+        description:Description,
+        wsId:id
+      }).then((res) => {
+        navigate('/chatpage')
+        onClose()
+      
+      })
     }
+  }
+
   
+  const handleInputFocus = () => {
+    setInputFocused(true);
   };
 
+  const handleInputBlur = () => {
+    setInputFocused(false);
+  };
 
-const EmailHandler = (e) => {
-    let regex = new RegExp("[a-z0-9]+@[a-z]+.[a-z]{2,3}");
+  const nameHandler = (e) => {
 
-    setEmail(e.target.value);
+    setname(e.target.value);
     if (e.target.value === "") {
-      seterr(true);
-      setErrors("Email is Required");
-    } else if (!regex.test(e.target.value)) {
-      seterr(true);
-      setErrors("Invalid Email");
+      setErr(true);
+      setErrors("name is Required");
     } else {
-      seterr(false);
+      setErr(false);
     }
   };
+  const DescriptionHandler = (e) => {
 
-
- 
-
- 
+    setDes(e.target.value);
+    if (e.target.value === "") {
+      setErr(true);
+      setErrors("Description is Required");
+    } else {
+      setErr(false);
+    }
+  };
   return (
     <>
       <style>
-        {
-          `
+        {`
+        img#logo {
+          margin: 10px;
+          width: 50px;
+        }
 
-        img {
-            margin: 10px;
-          }
+        .header-channel {
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          margin-top: 20px;
+        }
 
         h2 {
-            paddingTop: 10px;
-            font-size: 3rem;
-            line-height: 1;
-            display: flex;
-            marginLeft: 10px;
-            }
-
-        textarea{
-            font-size: 1.7rem;
-              padding: 10px;
-              width: 100%;
-              margin: 4px;
-              border: 1px solid #ddd;
-              border-radius: 0.5rem;
-              margin: 5px;
-          }
-
-
-        header-channel button{
-            grid-column: 1 / span 2;
-            justify-self: center;
-            margin-top: 1rem;
-          }
-        button {
-            font-size: 1.7rem;
-            padding: 8px;
-            margin: 3px;
-            border: 1px solid #ddd;
-            border-radius: 0.5rem;
-            bacground: blue;
-            }
-          
-        input {
-              font-size: 1.7rem;
-              padding: 10px;
-              width: 100%;
-              margin: 4px;
-              border: 1px solid #ddd;
-              border-radius: 0.5rem;
-            }
-          `
+          padding-top: 10px;
+          font-size: 2rem;
+          line-height: 1;
+          margin-left: 10px;
         }
+
+        h3 {
+          margin: 10px 0;
+        }
+
+        textarea,
+        input[type="text"] {
+          font-size: 1.7rem;
+          padding: 10px;
+          width: 100%;
+          margin: 4px;
+          border: 1px solid #ddd;
+          border-radius: 0.5rem;
+        }
+
+        .header-channel button {
+          font-size: 1.7rem;
+          padding: 8px;
+          margin: 3px;
+          border: 1px solid #ddd;
+          border-radius: 0.5rem;
+          background: blue;
+          color: white;
+        }
+
+        .error-message {
+          color: rgb(247, 14, 14);
+        }
+
+        .btnCoworker {
+          display: flex;
+          margin-top: 10px;
+        }
+
+        .btnCoworker button {
+          font-size: 1rem;
+          padding: 8px;
+          margin: 3px;
+          border: 1px solid #ddd;
+          border-radius: 0.5rem;
+          color: white;
+        }
+
+        .btnCoworker button.small {
+          padding: 6px;
+          font-size: 1.5rem;
+        }
+
+        .btnCoworker button.large {
+          padding: 10px;
+          font-size: 2rem;
+        }
+
+        .header-channel {
+          width: 500px;
+        }
+      `}
       </style>
 
-
       <div className="header-channel">
-        <img src={img1} alt="Facile" className="nav__logo" id="logo" />
-          <h2>
-              <span>Create your Channels</span>
-            </h2>
-            <h3>
-              Name:
-            </h3>
+        <img src={img1} alt="Facile" id="logo" />
+        <h2>Create Channel</h2>
         <input
-              type="text"
-              placeholder="# e.g Plan, Budget"
-              autoComplete="on"
-              onChange={EmailHandler}
-              value={email}
-            />
+          type="text"
+          placeholder="Name"
+          autoComplete="on"
+          onChange={nameHandler}
+          value={name}
+        />
         <textarea
-              type="text"
-              placeholder="# e.g Plan, Budget"
-              autoComplete="on"
-              onChange={EmailHandler}
-              value={email}
-            />
-            {err ? (
-              <span style={{ color: "rgb(247, 14, 14)" }}>
-                {errors}
-              </span>
-            ) : (
-              ""
-            )}
-            <button onClick={create}>Create</button>
-            <button onClick={onClose}>Close</button>
-          
+          type="text"
+          placeholder="Description"
+          autoComplete="on"
+          onChange={DescriptionHandler}
+          value={Description}
+        />
+        {err && <span className="error-message">{errors}</span>}
+        <div className={`btnCoworker ${inputFocused ? "large" : "small"}`}>
+          <button onClick={create}>Create Channel</button>
+          <button onClick={onClose}>Close</button>
         </div>
-       
-        
-    
+      </div>
     </>
   );
 }

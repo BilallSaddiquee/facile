@@ -43,10 +43,11 @@ function Login() {
           setErrors("Incorrect Password")
  
         }
-        else if (res.data === "Login") {
+        else if (res.data.userId !== "") {
           seterr(false)
           setErrors("");
-          localStorage.setItem('email_token', email)
+          console.log("helo",res.data.userId)
+          localStorage.setItem('email_token', res.data.userId)
           navigate('/');
         }
 
@@ -88,15 +89,17 @@ function Login() {
     <>
       <style>
         {`                    
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
+        body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #3f5a82;
+      backdrop-filter: blur(10px);
+    }
   
   .container-fluid {
     display: flex;
