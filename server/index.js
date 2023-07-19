@@ -397,30 +397,6 @@ app.delete('/Remove_Coworker/:coworkerId', async (req, res) => {
 
 
 
-// Define the GET endpoint for retrieving groups by workspace ID
-app.get('/channels/:workspaceId', (req, res) => {
-  const { workspaceId } = req.params;
-
-  // Query the database to check if there are any groups associated with the workspace ID
-  const query = 'SELECT * FROM channel WHERE ws_id = $1';
-  pool.query(query, [workspaceId], (err, result) => {
-    if (err) {
-      console.error('Error querying the database:', err);
-      res.status(500).json({ error: 'An error occurred while retrieving groups' });
-      return;
-    }
-
-    // Check if there are any groups associated with the workspace
-    if (result.rows.length === 0) {
-      res.status(404).json({ error: 'No groups found for the provided workspace ID' });
-      return;
-    }
-
-    // Return the retrieved groups in the response
-    res.json(result.rows);
-  });
-});
-
 
 
 
@@ -514,6 +490,7 @@ app.get("/Get_CoWorkers/:workspace_id", (req, res) => {
 
   })
 })
+
 //Get All Channels
 app.get("/Get_Channels", (req, res) => {
   console.log("im a server")
