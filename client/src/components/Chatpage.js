@@ -26,15 +26,20 @@ function Chatpage({ onClose }) {
   const [selectedDirectMessage, setSelectedDirectMessage] = useState(null);
   const [showAddButton, setShowAddButton] = useState(false);
   const [workspaceName, setWorkspaceName] = useState("");
+const [adminuser,setAdminUser] = useState("")
+
+
   const workspace_id = localStorage.getItem("workIDss");
-  const adminuser = localStorage.getItem("Coworker");
+  
   const [inputMessage, setInputMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [corworkerID, setCoworkerID] = useState("");
 
   useEffect(() => {
     fetchData();
-
+    setAdminUser(localStorage.getItem("Coworker"))
+    
+    console.log("loged in user ",adminuser)
 //     const socket = io();
 
 //     socket.on("connect", () => {
@@ -54,6 +59,7 @@ function Chatpage({ onClose }) {
   // 
   const [socket, setSocket] = useState(null);
   useEffect(() => {
+    console.log(adminuser)
     const socketInstance = io('http://localhost:3000');
     if (adminuser) {
       socketInstance.emit("add-user", adminuser);
@@ -83,7 +89,7 @@ function Chatpage({ onClose }) {
 
   const fetchData = () => {
     axios
-      .get(`http://localhost:3000/Get_Channels`)
+      .get(`http://localhost:3000/Get_Channels/${workspace_id}`)
       .then((response) => {
         setChannels(response.data.rows);
       })
@@ -92,7 +98,7 @@ function Chatpage({ onClose }) {
       });
 
     axios
-      .get(`http://localhost:3000/Get_CoWorkers`)
+      .get(`http://localhost:3000/Get_CoWorkers/${workspace_id}`)
       .then((response) => {
         setCoworkers(response.data.rows);
       })
@@ -175,6 +181,7 @@ console.log("selected USer", corworkerID)
   };
 
   const handleSendMessage = () => {
+    console.log("chekck   :    23456    :  ",adminuser)
     const messageData = {
       sender: adminuser,
       receiver: corworkerID.id,
@@ -219,6 +226,8 @@ console.log("selected USer", corworkerID)
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+
   return (
     <>
      <style>
