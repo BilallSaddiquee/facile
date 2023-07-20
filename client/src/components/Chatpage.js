@@ -282,7 +282,7 @@ console.log("selected USer", corworkerID)
 
 .logout-button {
  align-self: flex-end;
- margin-right: 35px;
+ margin-right: 50px;
 }
 .logout-button img {
  width: 30px;
